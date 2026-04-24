@@ -244,6 +244,26 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .ncdel{padding:4px 10px;background:transparent;border:1px solid #3d1a1a;border-radius:7px;color:#e05555;font-size:11px;cursor:pointer;white-space:nowrap;}
 .ncdel:active{background:#3d1a1a;}
 
+
+.notice-preview{cursor:pointer;}
+.notice-preview:active{opacity:.8;}
+.notice-title{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:6px;}
+.notice-expand-row{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+.notice-expand-hint{font-size:11px;color:var(--t4);}
+.notice-arrow{font-size:11px;color:var(--t4);transition:transform .2s;}
+.notice-arrow.open{transform:rotate(180deg);}
+.notice-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--bd);}
+.notice-content.show{display:block;}
+.nimg-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.nimg-item{width:calc(50% - 4px);border-radius:8px;overflow:hidden;cursor:pointer;}
+.nimg-item img{width:100%;height:auto;display:block;border-radius:8px;}
+.img-upload-row{margin-top:12px;}
+.img-upload-btn{width:100%;padding:11px;border:1px dashed var(--bd2);border-radius:10px;background:transparent;color:var(--t3);font-size:13px;cursor:pointer;text-align:center;}
+.img-preview-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.img-preview-item{position:relative;width:70px;height:70px;}
+.img-preview-item img{width:100%;height:100%;object-fit:cover;border-radius:6px;}
+.img-preview-del{position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#e05555;border-radius:50%;border:none;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+
 /* ── CALENDAR ── */
 .calbg{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
 .calbox{background:var(--bg1);border:1px solid var(--bd2);border-radius:18px;padding:20px;width:100%;max-width:340px;}
@@ -358,7 +378,7 @@ let members=ld('og10_mb',[]);
 let notices=ld('og10_nt',[]);
 let packages=ld('og10_pkg',[]);
 let centerCode=localStorage.getItem('og10_cc')||'0000';
-let codeVerified=localStorage.getItem('og10_cv')==='1';
+let codeVerified=localStorage.getItem('og11_cv')==='1';
 let curUser=ld('og10_cu',null);
 let weekOff=0;
 let selDay=(new Date().getDay()+6)%7;
@@ -415,7 +435,7 @@ function updateDots(){
 }
 function submitPin(){
   if(pinBuffer===centerCode){
-    localStorage.setItem('og10_cv','1');codeVerified=true;
+    localStorage.setItem('og11_cv','1');codeVerified=true;
     const gate=document.getElementById('gate');
     gate.classList.add('fade');
     setTimeout(()=>{gate.classList.add('gone');showApp();},800);
@@ -895,18 +915,57 @@ function renderAdmPkg(ct){
 }
 
 function renderAdmCode(ct){
+  // ─ 센터 코드 변경 ─
   ct.appendChild(mk('div','sec','센터 코드 변경'));
   const form=ct.appendChild(el('div','sform'));
   const ci=form.appendChild(el('input'));ci.type='password';ci.id='new-cc';ci.placeholder='새 코드 (4자리 숫자)';ci.maxLength=4;
+  ci.style.cssText='width:100%;padding:12px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;';
   form.appendChild(mk('button','sbtn','코드 변경')).onclick=()=>{
     const val=ci.value.trim();
     if(!/^\d{4}$/.test(val)){alert('4자리 숫자를 입력해주세요.');return;}
-    centerCode=val;localStorage.setItem('og10_cc',val);alert('센터 코드가 변경되었습니다.\n새 기기는 새 코드로 접속해야 합니다.');ci.value='';
+    centerCode=val;localStorage.setItem('og10_cc',val);alert('센터 코드가 변경되었습니다.');ci.value='';
   };
-  ct.appendChild(mk('div','sec','접속 초기화'));
-  const rb=ct.appendChild(mk('button','sform sbtn','모든 기기 코드 재입력 요청'));
-  rb.style.cssText='width:100%;padding:13px;border-radius:10px;border:none;background:var(--bg2);color:var(--t2);font-size:14px;cursor:pointer;';
-  rb.onclick=()=>{if(confirm('모든 기기에서 센터 코드를 다시 입력하게 됩니다.\n계속하시겠습니까?')){localStorage.setItem('og10_cv','0');codeVerified=false;alert('완료. 다음 접속 시 코드 입력이 필요합니다.');}};
+  const rb=form.appendChild(mk('button','','접속 초기화 (모든 기기)'));rb.style.cssText='width:100%;padding:11px;border-radius:9px;border:1px solid var(--bd2);background:transparent;color:var(--t3);font-size:13px;cursor:pointer;';
+  rb.onclick=()=>{if(confirm('모든 기기에서 센터 코드를 다시 입력하게 됩니다.')){localStorage.setItem('og11_cv','0');codeVerified=false;alert('완료.');} };
+
+  // ─ 직원 데이터 동기화 ─
+  ct.appendChild(mk('div','sec','📱 기기 간 직원 데이터 동기화'));
+  const syncBox=ct.appendChild(el('div','sform'));
+  syncBox.appendChild(mk('div','','다른 기기(스마트폰 등)에서 직원 목록을 가져올 수 있습니다.')).style.cssText='font-size:12px;color:#666;line-height:1.6;';
+
+  // 내보내기
+  const expBtn=syncBox.appendChild(mk('button','sbtn','📤 내보내기 코드 생성'));
+  const expOut=syncBox.appendChild(el('div'));expOut.id='exp-out';expOut.style.display='none';
+  const expTa=expOut.appendChild(el('textarea'));
+  expTa.style.cssText='width:100%;height:80px;padding:10px;border:1px solid var(--bd2);border-radius:8px;background:var(--bg2);color:var(--t2);font-size:11px;word-break:break-all;resize:none;margin-top:8px;';
+  expTa.readOnly=true;
+  const copyBtn=expOut.appendChild(mk('button','','코드 복사'));copyBtn.style.cssText='width:100%;padding:10px;margin-top:6px;border-radius:8px;border:none;background:#fff;color:#000;font-size:13px;font-weight:700;cursor:pointer;';
+  copyBtn.onclick=()=>{navigator.clipboard.writeText(expTa.value).then(()=>alert('복사되었습니다!'));};
+  expBtn.onclick=()=>{
+    const data={trainers,packages,cc:centerCode};
+    const code=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    expTa.value=code;expOut.style.display='block';
+  };
+
+  // 가져오기
+  syncBox.appendChild(mk('div','','━━━━')).style.cssText='color:#333;text-align:center;margin:8px 0;font-size:10px;';
+  syncBox.appendChild(mk('div','','다른 기기에서 생성한 코드를 아래에 붙여넣으세요.')).style.cssText='font-size:12px;color:#666;';
+  const impTa=syncBox.appendChild(el('textarea'));
+  impTa.style.cssText='width:100%;height:70px;padding:10px;border:1px solid var(--bd2);border-radius:8px;background:var(--bg2);color:var(--t2);font-size:11px;resize:none;margin-top:8px;';
+  impTa.placeholder='코드를 붙여넣으세요...';
+  const impBtn=syncBox.appendChild(mk('button','sbtn','📥 가져오기 적용'));
+  impBtn.style.marginTop='6px';
+  impBtn.onclick=()=>{
+    const code=impTa.value.trim();if(!code){alert('코드를 입력해주세요.');return;}
+    try{
+      const data=JSON.parse(decodeURIComponent(escape(atob(code))));
+      if(data.trainers&&Array.isArray(data.trainers)){trainers=data.trainers;sv('og10_tr',trainers);}
+      if(data.packages&&Array.isArray(data.packages)){packages=data.packages;sv('og10_pkg',packages);}
+      if(data.cc){centerCode=data.cc;localStorage.setItem('og10_cc',data.cc);}
+      alert('가져오기 완료! 직원 '+trainers.length+'명, 패키지 '+packages.length+'개 로드됨');
+      impTa.value='';renderAdm();
+    }catch(e){alert('코드가 올바르지 않습니다.');}
+  };
 }
 
 function addStaff(){
@@ -925,7 +984,15 @@ function openLogin(cb){
     sheet.appendChild(el('div','shdl'));sheet.appendChild(mk('h3','','로그인'));sheet.appendChild(mk('div','shsub','이름 선택 후 사번 입력'));
     let selId=null;
     const nml=sheet.appendChild(el('div','nmlist'));
+    // trainers 최신값으로 강제 로드
+    const latestTr=ld('og10_tr',trainers);
+    if(latestTr.length>trainers.length)trainers=latestTr;
     const sortedTr=[...trainers].sort((a,b)=>(b.role==='관리자'?1:0)-(a.role==='관리자'?1:0));
+    if(sortedTr.length<=1){
+      const hint=nml.appendChild(mk('div','',''));
+      hint.style.cssText='font-size:12px;color:#666;text-align:center;padding:8px;border:1px solid #333;border-radius:8px;margin-bottom:8px;line-height:1.5;';
+      hint.textContent='직원이 1명만 보이면 관리자 로그인 후\n[관리]→[설정]에서 동기화 코드를 가져오세요.';
+    }
     sortedTr.forEach(tr=>{
       const col=getTrainerColor(tr);
       const btn=nml.appendChild(el('button','nmbtn'));
@@ -984,8 +1051,11 @@ function renderNotice(){
   if(!sorted.length)ct.appendChild(mk('div','nempty','등록된 공지가 없습니다.'));
   sorted.forEach(n=>{
     const card=ct.appendChild(el('div','ncard'));
-    if(n.pinned)card.appendChild(mk('div','npinbdg','📌 고정'));
-    const hdr=card.appendChild(el('div','nchdr'));
+    // ── 미리보기 영역 (항상 보임, 클릭하면 펼침) ──
+    const preview=card.appendChild(el('div','notice-preview'));
+    if(n.pinned)preview.appendChild(mk('div','npinbdg','📌 고정'));
+    // 헤더: 작성자 + 날짜 + 읽음 + 삭제
+    const hdr=preview.appendChild(el('div','nchdr'));
     const aw=hdr.appendChild(el('div','ncauth'));
     const tr2=n.authorId?trainers.find(t=>t.id===n.authorId):trainers.find(t=>t.name===n.author);
     const av=aw.appendChild(el('div','ncav'));
@@ -993,12 +1063,12 @@ function renderNotice(){
     else{av.style.cssText='background:#252525;color:#888;';av.textContent=(n.author||'?')[0].toUpperCase();}
     const ai2=aw.appendChild(el('div'));ai2.appendChild(mk('div','ncnm',n.author||'익명'));ai2.appendChild(mk('div','ncdt',fmtTs(n.ts)));
     const acts=hdr.appendChild(el('div','ncard-acts'));
-    // 읽음 배지
     const reads=n.reads||[];
     const rb=acts.appendChild(mk('div','read-badge','읽음 '+reads.length+'명'));
     if(isAdminUser()&&reads.length>0){
       rb.classList.add('clickable');
-      rb.onclick=()=>{
+      rb.onclick=e=>{
+        e.stopPropagation();
         const existing=card.querySelector('.read-list');
         if(existing){existing.remove();return;}
         const rl=card.appendChild(el('div','read-list'));
@@ -1006,29 +1076,85 @@ function renderNotice(){
       };
     }
     if(isAdminUser()){
-      acts.appendChild(mk('button','ncdel','삭제')).onclick=()=>{if(confirm('삭제?')){notices=notices.filter(x=>x.id!==n.id);sv('og10_nt',notices);renderNotice();}};
+      const db=acts.appendChild(mk('button','ncdel','삭제'));
+      db.onclick=e=>{e.stopPropagation();if(confirm('삭제?')){notices=notices.filter(x=>x.id!==n.id);sv('og10_nt',notices);renderNotice();}};
     }
-    card.appendChild(mk('div','nbody',n.body));
+    // 제목
+    preview.appendChild(mk('div','notice-title',n.title||n.body.slice(0,30)+(n.body.length>30?'...':'')));
+    // 펼치기 힌트
+    const expRow=preview.appendChild(el('div','notice-expand-row'));
+    expRow.appendChild(mk('span','notice-expand-hint',n.body?'내용 보기':''));
+    const arrow=expRow.appendChild(mk('span','notice-arrow','▼'));
+    // ── 내용 영역 (접혀 있음) ──
+    const content=card.appendChild(el('div','notice-content'));
+    if(n.body)content.appendChild(mk('div','nbody',n.body));
+    // 이미지
+    const imgs=n.images||[];
+    if(imgs.length){
+      const il=content.appendChild(el('div','nimg-list'));
+      imgs.forEach(src=>{
+        const item=il.appendChild(el('div','nimg-item'));
+        const img=item.appendChild(el('img'));img.src=src;img.loading='lazy';
+        img.onclick=()=>{window.open(src,'_blank');};
+      });
+    }
+    // 클릭 토글
+    preview.onclick=()=>{
+      const open=content.classList.toggle('show');
+      arrow.classList.toggle('open',open);
+      expRow.querySelector('.notice-expand-hint').textContent=open?'접기':(n.body?'내용 보기':'');
+    };
   });
 }
 
 function openComposeNotice(){
+  let pendingImages=[];
   showSheet(function(sheet,close){
     sheet.appendChild(el('div','shdl'));sheet.appendChild(mk('h3','','공지 작성'));
+    // 제목
+    sheet.appendChild(mk('label','','제목'));
+    const ti=sheet.appendChild(el('input'));ti.type='text';ti.placeholder='공지 제목을 입력하세요';
+    ti.style.cssText='width:100%;padding:13px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;';
+    // 내용
     sheet.appendChild(mk('label','','내용'));
-    const ta=sheet.appendChild(el('textarea'));ta.id='nc-body';ta.style.cssText='width:100%;min-height:120px;padding:13px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;font-family:inherit;line-height:1.6;resize:none;';ta.placeholder='공지 내용을 입력하세요...';
+    const ta=sheet.appendChild(el('textarea'));ta.style.cssText='width:100%;min-height:110px;padding:13px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;font-family:inherit;line-height:1.6;resize:none;';ta.placeholder='공지 내용을 입력하세요...';
+    // 이미지 첨부
+    sheet.appendChild(mk('label','','사진 첨부 (선택)'));
+    const imgRow=sheet.appendChild(el('div','img-upload-row'));
+    const imgBtn=imgRow.appendChild(el('button','img-upload-btn'));imgBtn.textContent='📷 사진 추가';
+    const imgInput=imgRow.appendChild(el('input'));imgInput.type='file';imgInput.accept='image/*';imgInput.multiple=true;imgInput.style.display='none';
+    imgBtn.onclick=()=>imgInput.click();
+    const prevList=imgRow.appendChild(el('div','img-preview-list'));prevList.id='img-prev';
+    imgInput.onchange=()=>{
+      Array.from(imgInput.files).forEach(file=>{
+        const reader=new FileReader();
+        reader.onload=e=>{
+          pendingImages.push(e.target.result);
+          const item=prevList.appendChild(el('div','img-preview-item'));
+          const img=item.appendChild(el('img'));img.src=e.target.result;
+          const del=item.appendChild(el('button','img-preview-del'));del.textContent='×';
+          del.onclick=()=>{const idx=pendingImages.indexOf(e.target.result);if(idx>-1)pendingImages.splice(idx,1);item.remove();};
+        };
+        reader.readAsDataURL(file);
+      });
+      imgInput.value='';
+    };
+    // 고정
     const pr=sheet.appendChild(el('div','npinrow'));
     const pc=pr.appendChild(el('input'));pc.type='checkbox';pc.id='nc-pin';
     const pl=pr.appendChild(el('label'));pl.htmlFor='nc-pin';pl.textContent='상단 고정';
+    // 버튼
     const btns=sheet.appendChild(el('div','shbtns'));
     btns.appendChild(mk('button','shno','취소')).onclick=close;
     btns.appendChild(mk('button','shok','등록')).onclick=()=>{
-      const body=(ta.value||'').trim();if(!body){alert('내용을 입력해주세요.');return;}
+      const title=(ti.value||'').trim();
+      const body=(ta.value||'').trim();
+      if(!title&&!body){alert('제목 또는 내용을 입력해주세요.');return;}
       const tr=trainers.find(t=>t.id===curUser);
-      notices.unshift({id:'n'+Date.now(),body,author:tr?tr.name:'관리자',authorId:curUser,pinned:pc.checked,ts:Date.now(),reads:[]});
+      notices.unshift({id:'n'+Date.now(),title:title||'(제목 없음)',body,images:[...pendingImages],author:tr?tr.name:'관리자',authorId:curUser,pinned:pc.checked,ts:Date.now(),reads:[]});
       sv('og10_nt',notices);close();renderNotice();
     };
-    setTimeout(()=>ta.focus(),200);
+    setTimeout(()=>ti.focus(),200);
   });
 }
 
