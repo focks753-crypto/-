@@ -15,21 +15,17 @@
 :root{--bg0:#0d0d0d;--bg1:#1a1a1a;--bg2:#252525;--bg3:#303030;--bd:#2e2e2e;--bd2:#3d3d3d;--t1:#ffffff;--t2:#cccccc;--t3:#888888;--t4:#555555;--red:#e05555;--orange:#e8892a;}
 html{height:100%;}
 body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg0);color:var(--t1);display:flex;flex-direction:column;overflow:hidden;}
-/* HEADER */
 .hdr{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:var(--bg0);border-bottom:1px solid var(--bd);}
 .hdr-logo{width:34px;height:34px;object-fit:contain;}
 .hdr-ttl{flex:1;font-size:15px;font-weight:700;}
 .chip{padding:6px 12px;border-radius:20px;border:1px solid var(--bd2);background:var(--bg2);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
 .chip.on{border-color:transparent;color:#000;}
-/* TOP TABS */
 .tabs{flex-shrink:0;display:flex;gap:6px;padding:9px 14px;background:var(--bg0);border-bottom:1px solid var(--bd);}
 .tab{flex:1;padding:9px 4px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:var(--bg2);color:var(--t3);}
 .tab.on{background:#fff;color:#000;}
-/* PAGES */
 .pg{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:none;}
 .pg.show{display:block;}
 .pad{padding:14px 16px 100px;}
-/* SCHEDULE - DAY SELECTOR */
 .day-wrap{background:var(--bg0);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:10;}
 .wnav{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 6px;}
 .winfo{cursor:pointer;padding:4px 8px;border-radius:8px;}
@@ -47,9 +43,8 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .dtab.tod{border-color:var(--bd2);}
 .dtab.tod .dn{color:var(--t1);}
 .dtab.sel{background:#fff;border-color:transparent;}
-.dtab.sel .dw,.dtab.sel .dn{color:#000;}
 .dtab.sel .dw{color:#555;}
-/* TIME LIST */
+.dtab.sel .dn{color:#000;}
 .tlist{padding:0 0 100px;}
 .trow{display:flex;align-items:stretch;border-bottom:1px solid #1a1a1a;min-height:52px;}
 .trow.hr{border-bottom:1px solid #222;}
@@ -69,10 +64,8 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .delx:active{opacity:1;}
 .addbtn{width:100%;background:var(--bg2);border:none;border-radius:9px;color:var(--t3);font-size:12px;padding:8px;cursor:pointer;font-family:inherit;text-align:center;}
 .addbtn:active{background:var(--bg3);}
-/* FAB */
 .fab{position:fixed;right:18px;bottom:calc(16px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;background:#fff;color:#000;font-size:28px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,.7);}
 .fab:active{transform:scale(.93);}
-/* MEMBER TAB */
 .trgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .trcard{background:var(--bg1);border:1px solid var(--bd);border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;}
 .trcard:active{background:var(--bg2);}
@@ -97,17 +90,14 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .dlsel{padding:9px 12px;border:1px solid var(--bd2);border-radius:9px;background:var(--bg2);color:var(--t1);font-size:13px;}
 .dlbtn{background:var(--bg2);border:1px solid var(--bd2);border-radius:9px;color:var(--t2);font-size:13px;padding:9px 16px;cursor:pointer;}
 .addmem{width:100%;padding:12px;background:var(--bg2);border:1px solid var(--bd2);border-radius:10px;color:var(--t2);font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;}
-/* SEC TITLE */
 .sec{font-size:11px;color:var(--t4);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;margin-top:20px;}
 .sec:first-child{margin-top:0;}
-/* FORMS */
 .sform{background:var(--bg1);border:1px solid var(--bd);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;}
 .sform input,.sform select{width:100%;padding:12px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;}
 .sform input::placeholder{color:var(--t4);}
 .sform .r2{display:flex;gap:8px;}
 .sform .r2>*{flex:1;min-width:0;}
 .sform .sbtn{width:100%;padding:13px;border-radius:10px;border:none;background:#fff;color:#000;font-size:15px;font-weight:700;cursor:pointer;}
-/* STAFF CARD */
 .stcard{background:var(--bg1);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:13px;margin-bottom:8px;}
 .stav{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;}
 .stinfo{flex:1;min-width:0;}
@@ -115,14 +105,22 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .strl{font-size:12px;color:var(--t3);margin-top:2px;}
 .stdel{width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--bd);color:var(--t3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .stdel:active{background:#3d1a1a;color:#ffaaaa;}
-/* ADMIN */
 .lockbox{background:var(--bg1);border:1px solid var(--bd);border-radius:14px;padding:24px;text-align:center;}
 .lockbox p{font-size:14px;color:var(--t2);margin-bottom:14px;}
 .lockbox button{background:var(--bg2);border:1px solid var(--bd2);border-radius:10px;color:var(--t2);font-size:14px;padding:11px 24px;cursor:pointer;}
-.adminbar{display:flex;gap:8px;margin-bottom:14px;align-items:center;}
+.adminbar{display:flex;gap:8px;margin-bottom:12px;align-items:center;}
 .abadge{font-size:11px;color:var(--orange);border:1px solid var(--orange);border-radius:6px;padding:3px 10px;font-weight:700;}
 .aout{font-size:12px;color:var(--t3);background:var(--bg2);border:1px solid var(--bd2);border-radius:8px;padding:5px 12px;cursor:pointer;}
-.pwbtn{font-size:12px;color:var(--t4);background:transparent;border:none;cursor:pointer;text-decoration:underline;margin-top:8px;display:block;}
+.pwbtn{font-size:12px;color:var(--t4);background:transparent;border:none;cursor:pointer;text-decoration:underline;margin-top:10px;display:block;}
+.admsubtabs{display:flex;gap:5px;margin-bottom:16px;background:var(--bg2);border-radius:12px;padding:4px;}
+.admsubtab{flex:1;padding:9px 4px;border-radius:9px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:transparent;color:var(--t3);}
+.admsubtab.on{background:var(--bg0);color:var(--t1);}
+.pkgcard{background:var(--bg1);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.pkginfo{font-size:14px;font-weight:600;color:var(--t1);}
+.pkgprice{font-size:12px;color:var(--t3);margin-top:2px;}
+.pkgdel{padding:5px 12px;background:var(--bg2);border:1px solid var(--bd2);border-radius:7px;color:var(--t3);font-size:12px;cursor:pointer;}
+.pkgdel:active{background:#3d1a1a;color:#ffaaaa;}
+.pkg-auto{padding:13px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg3);color:var(--t1);font-size:15px;font-weight:600;}
 .prcard{background:var(--bg1);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:8px;}
 .prhdr{font-size:14px;font-weight:700;margin-bottom:10px;}
 .prrow{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
@@ -130,7 +128,6 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .prinp{flex:1;padding:8px 12px;border:1px solid var(--bd2);border-radius:8px;background:var(--bg2);color:var(--t1);font-size:14px;}
 .prunit{font-size:12px;color:var(--t3);flex-shrink:0;}
 .prsave{padding:7px 16px;background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;color:var(--t2);font-size:12px;cursor:pointer;margin-top:4px;}
-/* NOTICE */
 .ncomp{background:var(--bg1);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:16px;}
 .ncomp textarea{width:100%;background:var(--bg2);border:1px solid var(--bd2);border-radius:10px;color:var(--t1);font-size:15px;padding:12px 14px;resize:none;min-height:90px;font-family:inherit;line-height:1.6;}
 .ncomp textarea::placeholder{color:var(--t4);}
@@ -152,9 +149,8 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .nbody{font-size:14px;color:var(--t2);line-height:1.7;white-space:pre-wrap;word-break:break-word;}
 .npinbdg{display:inline-flex;align-items:center;font-size:11px;font-weight:700;color:var(--orange);border:1px solid var(--orange);border-radius:6px;padding:2px 8px;margin-bottom:10px;}
 .nempty{text-align:center;padding:3rem 0;color:var(--t4);font-size:14px;}
-/* SHEETS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:flex;align-items:flex-end;}
-.sheet{width:100%;background:var(--bg1);border-radius:20px 20px 0 0;padding:0 18px calc(28px + env(safe-area-inset-bottom));border-top:1px solid var(--bd2);max-height:90vh;overflow-y:auto;}
+.sheet{width:100%;background:var(--bg1);border-radius:20px 20px 0 0;padding:0 18px calc(28px + env(safe-area-inset-bottom));border-top:1px solid var(--bd2);max-height:92vh;overflow-y:auto;}
 .shdl{width:40px;height:4px;background:var(--bd2);border-radius:2px;margin:14px auto 16px;}
 .sheet h3{font-size:17px;font-weight:700;margin-bottom:3px;}
 .shsub{font-size:13px;color:var(--t3);margin-bottom:16px;}
@@ -165,14 +161,12 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .shbtns button{flex:1;padding:14px;border-radius:12px;font-size:15px;cursor:pointer;font-weight:700;}
 .shno{background:var(--bg2);border:1px solid var(--bd2);color:var(--t2);}
 .shok{background:#fff;color:#000;border:none;}
-/* NAME LIST */
 .nmlist{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
 .nmbtn{width:100%;padding:12px 16px;border-radius:10px;background:var(--bg2);border:1px solid var(--bd2);color:var(--t1);font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;}
 .nmbtn:active{background:var(--bg3);}
 .nmav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
 .nminf{display:flex;flex-direction:column;}
 .nmrl{font-size:11px;color:var(--t3);margin-top:1px;}
-/* CALENDAR */
 .calbg{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
 .calbox{background:var(--bg1);border:1px solid var(--bd2);border-radius:18px;padding:20px;width:100%;max-width:340px;}
 .calnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
@@ -222,7 +216,7 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 <div class="pg" id="pg-adm"><div class="pad"></div></div>
 <button class="fab" id="fab" onclick="openAddSheet()">+</button>
 <div id="cal-cont"></div>
-<div id="sheet-root"></div>
+<div id="sr"></div>
 <script>
 const COLORS=[
   {bg:'#1a3a5c',text:'#a8d4ff',dot:'#4a9eff'},
@@ -244,59 +238,51 @@ const TIMES=genTimes();
 function ld(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
 function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 
-let trainers=ld('og7_tr',[]);
-let slots=ld('og7_sl',[]);
-let members=ld('og7_mb',[]);
-let notices=ld('og7_nt',[]);
-let adminPw=localStorage.getItem('og7_pw')||'1234';
-let curUser=ld('og7_cu',null);
+let trainers=ld('og8_tr',[]);
+let slots=ld('og8_sl',[]);
+let members=ld('og8_mb',[]);
+let notices=ld('og8_nt',[]);
+let packages=ld('og8_pkg',[]);
+let adminPw=localStorage.getItem('og8_pw')||'1234';
+let curUser=ld('og8_cu',null);
 let isAdmin=false;
 let weekOff=0;
 let selDay=(new Date().getDay()+6)%7;
 let newColor=0;
 let mvTr=null;
+let admSubTab='staff';
 
 if(!trainers.length){
   trainers=[{id:'t1',name:'트레이너1',role:'트레이너',phone:'',saban:'0001',color:0}];
-  sv('og7_tr',trainers);
+  sv('og8_tr',trainers);
 }
 
 function el(t,c){const e=document.createElement(t);if(c)e.className=c;return e;}
-function txt(e,t){e.textContent=t;return e;}
+function mk(t,c,tx){const e=el(t,c);if(tx!==undefined)e.textContent=tx;return e;}
 function dateKey(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function isToday(d){return dateKey(d)===dateKey(new Date());}
 function fmtTs(ts){const d=new Date(ts);return(d.getMonth()+1)+'/'+d.getDate()+' '+p2(d.getHours())+':'+p2(d.getMinutes());}
 function initials(n){const w=(n||'').trim().split(/\s+/);return w.map(x=>x[0]||'').join('').toUpperCase().slice(0,2)||'?';}
 function getWeekDates(o){
-  const now=new Date();const dow=now.getDay();
-  const mon=new Date(now);mon.setHours(0,0,0,0);
-  mon.setDate(now.getDate()-((dow+6)%7)+o*7);
+  const now=new Date();const mon=new Date(now);mon.setHours(0,0,0,0);
+  mon.setDate(now.getDate()-((now.getDay()+6)%7)+o*7);
   return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});
 }
-function getWeekNum(d){
-  const first=new Date(d.getFullYear(),d.getMonth(),1);
-  const fd=(first.getDay()+6)%7;
-  return Math.ceil((d.getDate()+fd)/7);
-}
-function fmtWeek(wd){
-  const a=wd[0],b=wd[6];
-  return {m:'[ '+(a.getMonth()+1)+'월 '+getWeekNum(a)+'주차 ]',s:(a.getMonth()+1)+'월 '+a.getDate()+'일 ~ '+(b.getMonth()+1)+'월 '+b.getDate()+'일'};
-}
-function getUsed(mid){return slots.filter(s=>s.memberId===mid).length;}
-function getRemain(m){return (m.totalSessions||0)-getUsed(m.id);}
+function getWeekNum(d){const f=new Date(d.getFullYear(),d.getMonth(),1);return Math.ceil((d.getDate()+(f.getDay()+6)%7)/7);}
+function fmtWeek(wd){const a=wd[0],b=wd[6];return{m:'[ '+(a.getMonth()+1)+'월 '+getWeekNum(a)+'주차 ]',s:(a.getMonth()+1)+'월 '+a.getDate()+'일 ~ '+(b.getMonth()+1)+'월 '+b.getDate()+'일'};}
 
-// --- CHIP ---
+// OT는 횟수 차감 안함
+function getUsed(mid){return slots.filter(s=>s.memberId===mid&&s.type!=='OT').length;}
+function getRemain(m){return(m.totalSessions||0)-getUsed(m.id);}
+
+// CHIP
 function updChip(){
-  const c=document.getElementById('chip');
-  if(!c)return;
-  if(curUser){
-    const tr=trainers.find(t=>t.id===curUser);
-    if(tr){const col=COLORS[tr.color%COLORS.length];c.textContent=tr.name;c.style.background=col.dot;c.classList.add('on');return;}
-  }
+  const c=document.getElementById('chip');if(!c)return;
+  if(curUser){const tr=trainers.find(t=>t.id===curUser);if(tr){const col=COLORS[tr.color%COLORS.length];c.textContent=tr.name;c.style.background=col.dot;c.classList.add('on');return;}}
   c.textContent='로그인';c.style.background='';c.classList.remove('on');
 }
 
-// --- TABS ---
+// TABS
 function switchTab(id){
   ['sch','not','mem','adm'].forEach(x=>{
     document.getElementById('pg-'+x).classList.toggle('show',x===id);
@@ -308,68 +294,49 @@ function switchTab(id){
   if(id==='adm')renderAdm();
 }
 
-// --- WEEK NAV ---
+// WEEK
 function chW(d){weekOff+=d;renderDays();renderTimes();}
 function goToday(){weekOff=0;selDay=(new Date().getDay()+6)%7;renderDays();renderTimes();}
-
 function renderDays(){
-  const wd=getWeekDates(weekOff);
-  const{m,s}=fmtWeek(wd);
-  document.getElementById('wm').textContent=m;
-  document.getElementById('ws').textContent=s;
-  const tabs=document.getElementById('dtabs');
-  tabs.innerHTML='';
+  const wd=getWeekDates(weekOff);const{m,s}=fmtWeek(wd);
+  document.getElementById('wm').textContent=m;document.getElementById('ws').textContent=s;
+  const tabs=document.getElementById('dtabs');tabs.innerHTML='';
   wd.forEach((d,i)=>{
     const tab=el('div','dtab'+(isToday(d)?' tod':'')+(i===selDay?' sel':''));
-    txt(el('div','dw'),'').textContent=DAYS[d.getDay()];
-    const dw=tab.appendChild(el('div','dw'));dw.textContent=DAYS[d.getDay()];
-    const dn=tab.appendChild(el('div','dn'));dn.textContent=d.getDate();
+    tab.appendChild(mk('div','dw',DAYS[d.getDay()]));
+    tab.appendChild(mk('div','dn',''+d.getDate()));
     tab.onclick=()=>{selDay=i;renderDays();renderTimes();};
     tabs.appendChild(tab);
   });
 }
-
 function renderTimes(){
-  const wd=getWeekDates(weekOff);
-  const key=dateKey(wd[selDay]);
-  const list=document.getElementById('tlist');
-  if(!list)return;
-  list.innerHTML='';
+  const wd=getWeekDates(weekOff);const key=dateKey(wd[selDay]);
+  const list=document.getElementById('tlist');if(!list)return;list.innerHTML='';
   TIMES.forEach(time=>{
     const half=time.endsWith(':30');
     const row=list.appendChild(el('div','trow'+(half?'':' hr')));
-    const tc=row.appendChild(el('div','tcol'));
-    const lbl=tc.appendChild(el('span','tlbl'+(half?' half':'')));
-    lbl.textContent=time;
+    const tc=row.appendChild(el('div','tcol'));tc.appendChild(mk('span','tlbl'+(half?' half':''),time));
     const sc=row.appendChild(el('div','scol'));
     slots.filter(s=>s.date===key&&s.time===time).forEach(s=>{
-      const tr=trainers.find(t=>t.id===s.trainerId);
-      if(!tr)return;
+      const tr=trainers.find(t=>t.id===s.trainerId);if(!tr)return;
       const col=COLORS[tr.color%COLORS.length];
-      const slot=sc.appendChild(el('div','slot'));
-      slot.style.background=col.bg;slot.style.color=col.text;
+      const slot=sc.appendChild(el('div','slot'));slot.style.background=col.bg;slot.style.color=col.text;
       const si=slot.appendChild(el('div','si'));
-      si.appendChild(el('div','sname')).textContent=tr.name;
+      si.appendChild(mk('div','sname',tr.name));
       const mb=s.memberId?members.find(m=>m.id===s.memberId):null;
       if(mb){
-        si.appendChild(el('div','smem')).textContent=mb.name+(s.memo?' · '+s.memo:'');
+        si.appendChild(mk('div','smem',mb.name+(s.memo?' · '+s.memo:'')));
         const bdgs=si.appendChild(el('div','sbdgs'));
-        bdgs.appendChild(el('span','tbdg')).textContent=s.type;
-        const rem=getRemain(mb);
-        const rb=bdgs.appendChild(el('span','rbdg'+(rem<3?' warn':'')));
-        rb.textContent='잔여 '+rem+'회';
+        bdgs.appendChild(mk('span','tbdg',s.type));
+        if(s.type!=='OT'){const rem=getRemain(mb);bdgs.appendChild(mk('span','rbdg'+(rem<3?' warn':''),'잔여 '+rem+'회'));}
+        else{bdgs.appendChild(mk('span','tbdg','차감없음'));}
       } else {
-        if(s.memo)si.appendChild(el('div','smem')).textContent=s.memo;
-        si.appendChild(el('div','sbdgs')).appendChild(el('span','tbdg')).textContent=s.type;
+        if(s.memo)si.appendChild(mk('div','smem',s.memo));
+        si.appendChild(el('div','sbdgs')).appendChild(mk('span','tbdg',s.type));
       }
-      const canDel=isAdmin||(curUser===s.trainerId);
-      if(canDel){
+      if(isAdmin||(curUser===s.trainerId)){
         const dx=slot.appendChild(el('button','delx'));dx.textContent='×';
-        dx.onclick=()=>{
-          if(confirm('삭제할까요?')){
-            slots=slots.filter(x=>x.id!==s.id);sv('og7_sl',slots);renderTimes();
-          }
-        };
+        dx.onclick=()=>{if(confirm('삭제할까요?')){slots=slots.filter(x=>x.id!==s.id);sv('og8_sl',slots);renderTimes();}};
       }
     });
     const ab=sc.appendChild(el('button','addbtn'));ab.textContent='+ 추가';
@@ -377,32 +344,36 @@ function renderTimes(){
   });
 }
 
-// --- ADD SLOT SHEET ---
+// ADD SLOT SHEET
 function openAddSheet(time){
-  const wd=getWeekDates(weekOff);
-  const sd=wd[selDay];
-  const key=dateKey(sd);
+  const wd=getWeekDates(weekOff);const sd=wd[selDay];const key=dateKey(sd);
   const dn=['일','월','화','수','목','금','토'];
   showSheet(function(sheet,close){
     sheet.appendChild(el('div','shdl'));
-    txt(sheet.appendChild(el('h3')),'스케줄 추가');
-    txt(sheet.appendChild(el('div','shsub')),dn[sd.getDay()]+'요일 '+(sd.getMonth()+1)+'월'+sd.getDate()+'일'+(time?' · '+time:''));
-    // 직원 select
-    txt(sheet.appendChild(el('label')),'직원');
-    const tsel=sheet.appendChild(el('select'));tsel.id='sh-tr';
+    sheet.appendChild(mk('h3','','스케줄 추가'));
+    sheet.appendChild(mk('div','shsub',dn[sd.getDay()]+'요일 '+(sd.getMonth()+1)+'월'+sd.getDate()+'일'+(time?' · '+time:'')));
+
+    sheet.appendChild(mk('label','','직원'));
+    const tsel=sheet.appendChild(el('select'));
     trainers.forEach(t=>{const o=tsel.appendChild(document.createElement('option'));o.value=t.id;o.textContent=t.name+' ('+t.role+')';if(t.id===curUser)o.selected=true;});
-    // 시간 select
-    txt(sheet.appendChild(el('label')),'시간');
-    const tmsel=sheet.appendChild(el('select'));tmsel.id='sh-tm';
+
+    sheet.appendChild(mk('label','','시간'));
+    const tmsel=sheet.appendChild(el('select'));
     TIMES.forEach(t=>{const o=tmsel.appendChild(document.createElement('option'));o.value=t;o.textContent=t;if(t===time)o.selected=true;});
-    // 유형 select
-    txt(sheet.appendChild(el('label')),'일정 유형');
-    const tysel=sheet.appendChild(el('select'));tysel.id='sh-ty';
+
+    sheet.appendChild(mk('label','','일정 유형'));
+    const tysel=sheet.appendChild(el('select'));
     TYPES.forEach(t=>{const o=tysel.appendChild(document.createElement('option'));o.value=t;o.textContent=t;});
-    // 회원 select
-    txt(sheet.appendChild(el('label')),'회원 선택 (선택)');
-    const mbsel=sheet.appendChild(el('select'));mbsel.id='sh-mb';
+
+    // 회원 섹션 (상담+관리자이면 숨김)
+    const mbLbl=sheet.appendChild(mk('label','','회원 선택 (선택)'));
+    const mbsel=sheet.appendChild(el('select'));
     mbsel.appendChild(document.createElement('option')).textContent='-- 없음 --';
+
+    // 메모
+    const moLbl=sheet.appendChild(mk('label','','메모 (선택)'));
+    const mo=sheet.appendChild(el('input'));mo.placeholder='메모';
+
     function fillMembers(){
       while(mbsel.options.length>1)mbsel.remove(1);
       members.filter(m=>m.trainerId===tsel.value).forEach(m=>{
@@ -410,243 +381,321 @@ function openAddSheet(time){
         o.value=m.id;o.textContent=m.name+' (잔여 '+getRemain(m)+'회)';
       });
     }
-    tsel.onchange=fillMembers;fillMembers();
-    // 메모
-    txt(sheet.appendChild(el('label')),'메모 (선택)');
-    const mo=sheet.appendChild(el('input'));mo.placeholder='메모';
-    // 버튼
+
+    function updateMode(){
+      const tr=trainers.find(t=>t.id===tsel.value);
+      const isConsult=tysel.value==='상담'&&tr&&tr.role==='관리자';
+      mbLbl.style.display=isConsult?'none':'block';
+      mbsel.style.display=isConsult?'none':'block';
+      moLbl.textContent=isConsult?'상담 내용 / 메모':'메모 (선택)';
+      mo.placeholder=isConsult?'상담 내용 입력':'메모';
+    }
+
+    tsel.onchange=()=>{fillMembers();updateMode();};
+    tysel.onchange=updateMode;
+    fillMembers();updateMode();
+
     const btns=sheet.appendChild(el('div','shbtns'));
     const cc=btns.appendChild(el('button','shno'));cc.textContent='취소';cc.onclick=close;
     const ok=btns.appendChild(el('button','shok'));ok.textContent='추가';
     ok.onclick=()=>{
       const tid=tsel.value,tm=tmsel.value,ty=tysel.value;
-      const mid=mbsel.value||null;
+      const mid=mbsel.style.display==='none'?null:(mbsel.value||null);
       const memo=mo.value.trim();
       slots.push({id:'s'+Date.now(),trainerId:tid,memberId:mid,date:key,time:tm,type:ty,memo});
-      sv('og7_sl',slots);close();renderTimes();
+      sv('og8_sl',slots);close();renderTimes();
     };
     setTimeout(()=>mo.focus(),200);
   });
 }
 
-// --- CALENDAR ---
+// CALENDAR
 function openCal(){
   let cy=new Date().getFullYear(),cm=new Date().getMonth();
   function draw(){
-    const cont=document.getElementById('cal-cont');
-    cont.innerHTML='';
-    const bg=cont.appendChild(el('div','calbg'));
-    bg.onclick=e=>{if(e.target===bg)cont.innerHTML='';};
+    const cont=document.getElementById('cal-cont');cont.innerHTML='';
+    const bg=cont.appendChild(el('div','calbg'));bg.onclick=e=>{if(e.target===bg)cont.innerHTML='';};
     const box=bg.appendChild(el('div','calbox'));
     const nav=box.appendChild(el('div','calnav'));
-    const pb=nav.appendChild(el('button','calarr'));pb.textContent='◀';
-    pb.onclick=()=>{cm--;if(cm<0){cm=11;cy--;}draw();};
-    txt(nav.appendChild(el('div','callbl')),cy+'년 '+(cm+1)+'월');
-    const nb=nav.appendChild(el('button','calarr'));nb.textContent='▶';
-    nb.onclick=()=>{cm++;if(cm>11){cm=0;cy++;}draw();};
+    const pb=nav.appendChild(el('button','calarr'));pb.textContent='◀';pb.onclick=()=>{cm--;if(cm<0){cm=11;cy--;}draw();};
+    nav.appendChild(mk('div','callbl',cy+'년 '+(cm+1)+'월'));
+    const nb=nav.appendChild(el('button','calarr'));nb.textContent='▶';nb.onclick=()=>{cm++;if(cm>11){cm=0;cy++;}draw();};
     const grid=box.appendChild(el('div','calgrid'));
-    ['월','화','수','목','금','토','일'].forEach(d=>txt(grid.appendChild(el('div','caldw')),d));
-    const fd=(new Date(cy,cm,1).getDay()+6)%7;
-    const dim=new Date(cy,cm+1,0).getDate();
-    const tod=new Date();
-    const cwd=getWeekDates(weekOff);
+    ['월','화','수','목','금','토','일'].forEach(d=>grid.appendChild(mk('div','caldw',d)));
+    const fd=(new Date(cy,cm,1).getDay()+6)%7,dim=new Date(cy,cm+1,0).getDate();
+    const tod=new Date();const cwd=getWeekDates(weekOff);
     for(let i=0;i<fd;i++)grid.appendChild(el('div','calday e'));
     for(let d=1;d<=dim;d++){
       const dt=new Date(cy,cm,d);
-      const isT=dateKey(dt)===dateKey(tod);
-      const inW=cwd.some(w=>dateKey(w)===dateKey(dt));
-      const de=grid.appendChild(el('div','calday'+(isT?' now':'')+(inW?' cw':'')));
-      de.textContent=d;
+      const isT=dateKey(dt)===dateKey(tod),inW=cwd.some(w=>dateKey(w)===dateKey(dt));
+      const de=grid.appendChild(mk('div','calday'+(isT?' now':'')+(inW?' cw':''),''+d));
       de.onclick=()=>{
-        const nowMon=new Date();nowMon.setDate(nowMon.getDate()-((nowMon.getDay()+6)%7));nowMon.setHours(0,0,0,0);
-        const clkMon=new Date(dt);clkMon.setDate(dt.getDate()-((dt.getDay()+6)%7));clkMon.setHours(0,0,0,0);
-        weekOff=Math.round((clkMon-nowMon)/(7*24*60*60*1000));
-        selDay=(dt.getDay()+6)%7;
+        const nm=new Date();nm.setDate(nm.getDate()-((nm.getDay()+6)%7));nm.setHours(0,0,0,0);
+        const cm2=new Date(dt);cm2.setDate(dt.getDate()-((dt.getDay()+6)%7));cm2.setHours(0,0,0,0);
+        weekOff=Math.round((cm2-nm)/(7*24*60*60*1000));selDay=(dt.getDay()+6)%7;
         cont.innerHTML='';renderDays();renderTimes();
       };
     }
-    const cl=box.appendChild(el('button','calclose'));cl.textContent='닫기';cl.onclick=()=>cont.innerHTML='';
+    const cl=box.appendChild(mk('button','calclose','닫기'));cl.onclick=()=>cont.innerHTML='';
   }
   draw();
 }
 
-// --- MEMBER TAB ---
+// MEMBER TAB
 function renderMem(){
-  const ct=document.getElementById('pg-mem').querySelector('.pad');
-  ct.innerHTML='';
-  if(mvTr){renderMemberView(ct);return;}
+  const ct=document.getElementById('pg-mem').querySelector('.pad');ct.innerHTML='';
+  if(mvTr){renderMemView(ct);return;}
   const grid=ct.appendChild(el('div','trgrid'));
   trainers.forEach(tr=>{
     const col=COLORS[tr.color%COLORS.length];
     const card=grid.appendChild(el('div','trcard'));
     const av=card.appendChild(el('div','trav'));av.style.cssText='background:'+col.bg+';color:'+col.text+';';av.textContent=initials(tr.name);
-    txt(card.appendChild(el('div','trnm')),tr.name);
+    card.appendChild(mk('div','trnm',tr.name));
     const myM=members.filter(m=>m.trainerId===tr.id);
-    txt(card.appendChild(el('div','trcnt')),'회원 '+myM.length+'명');
-    const wc=myM.filter(m=>getRemain(m)<3).length;
-    if(wc>0)txt(card.appendChild(el('div','trwarn')),'연장상담 '+wc+'명');
+    card.appendChild(mk('div','trcnt','회원 '+myM.length+'명'));
+    const wc=myM.filter(m=>getRemain(m)<3&&getRemain(m)>=0).length;
+    if(wc>0)card.appendChild(mk('div','trwarn','연장상담 '+wc+'명'));
     card.onclick=()=>{mvTr=tr.id;renderMem();};
   });
 }
-function renderMemberView(ct){
+function renderMemView(ct){
   const tr=trainers.find(t=>t.id===mvTr);if(!tr)return;
   const hdr=ct.appendChild(el('div','mvhdr'));
   const bk=hdr.appendChild(el('button','backbtn'));bk.textContent='← 뒤로';bk.onclick=()=>{mvTr=null;renderMem();};
-  txt(hdr.appendChild(el('div','mvttl')),tr.name+' 트레이너');
-  // 다운로드 바
+  hdr.appendChild(mk('div','mvttl',tr.name+' 트레이너'));
   const dlbar=ct.appendChild(el('div','dlbar'));
   const dlsel=dlbar.appendChild(el('select','dlsel'));
   const now=new Date();
   for(let i=0;i<12;i++){const d=new Date(now.getFullYear(),now.getMonth()-i,1);const o=dlsel.appendChild(document.createElement('option'));o.value=d.getFullYear()+'-'+(d.getMonth()+1);o.textContent=d.getFullYear()+'년 '+(d.getMonth()+1)+'월';}
-  const dlbtn=dlbar.appendChild(el('button','dlbtn'));dlbtn.textContent='엑셀 다운로드';
+  const dlbtn=dlbar.appendChild(mk('button','dlbtn','엑셀 다운로드'));
   dlbtn.onclick=()=>{const[y,m]=dlsel.value.split('-').map(Number);dlCSV(mvTr,y,m);};
-  // 회원 목록
   const myM=members.filter(m=>m.trainerId===mvTr);
-  if(!myM.length){txt(ct.appendChild(el('div')),'등록된 회원이 없습니다.').style.cssText='color:#555;font-size:13px;padding:1rem 0;';}
+  if(!myM.length){const em=ct.appendChild(mk('div','','등록된 회원이 없습니다.'));em.style.cssText='color:#555;font-size:13px;padding:1rem 0;';}
   myM.forEach(m=>{
     const rem=getRemain(m);
     const card=ct.appendChild(el('div','memcard'));
     const top=card.appendChild(el('div','memtop'));
-    txt(top.appendChild(el('div','memnm')),m.name);
-    if(rem<3)txt(top.appendChild(el('div','memwarn')),'연장 상담 대상자');
-    const dd=top.appendChild(el('button','mdel'));dd.textContent='×';
-    dd.onclick=()=>{if(confirm(m.name+' 삭제?')){members=members.filter(x=>x.id!==m.id);sv('og7_mb',members);renderMem();}};
+    top.appendChild(mk('div','memnm',m.name));
+    if(rem<3&&rem>=0)top.appendChild(mk('div','memwarn','연장 상담 대상자'));
+    const dd=top.appendChild(mk('button','mdel','×'));
+    dd.onclick=()=>{if(confirm(m.name+' 삭제?')){members=members.filter(x=>x.id!==m.id);sv('og8_mb',members);renderMem();}};
     const row=card.appendChild(el('div','memrow'));
-    [['총 '+m.totalSessions+'회',false],['잔여 '+rem+'회',true],[m.duration+'분',false],[(m.pricePerSession||0).toLocaleString()+'원/회',false]].forEach(([t,h])=>{
-      txt(row.appendChild(el('span','mtag'+(h?' hi':''))),t);
-    });
-    if(m.phone)txt(card.appendChild(el('div','mphone')),m.phone);
+    const tags=[['총 '+m.totalSessions+'회',false],['잔여 '+rem+'회',true],[m.duration+'분',false],[(m.totalPrice||0).toLocaleString()+'원권',false]];
+    tags.forEach(([t,h])=>row.appendChild(mk('span','mtag'+(h?' hi':''),t)));
+    if(m.phone)card.appendChild(mk('div','mphone',m.phone));
   });
   if(isAdmin||(curUser===mvTr)){
-    const ab=ct.appendChild(el('button','addmem'));ab.textContent='+ 회원 등록';
-    ab.onclick=()=>openAddMem(mvTr);
+    const ab=ct.appendChild(mk('button','addmem','+ 회원 등록'));ab.onclick=()=>openAddMem(mvTr);
   }
 }
+
+// ADD MEMBER - 패키지 기반
 function openAddMem(tid){
   const tr=trainers.find(t=>t.id===tid);
   showSheet(function(sheet,close){
     sheet.appendChild(el('div','shdl'));
-    txt(sheet.appendChild(el('h3')),'회원 등록');
-    txt(sheet.appendChild(el('div','shsub')),tr?tr.name+' 트레이너':'');
-    const flds=[['mb-n','이름','홍길동','text'],['mb-p','연락처','010-0000-0000','tel'],['mb-s','총 수업 횟수','10','number'],['mb-pr','회당 단가(원)','50000','number']];
-    flds.forEach(([id,lbl,ph,type])=>{
-      txt(sheet.appendChild(el('label')),lbl);
-      const i=sheet.appendChild(el('input'));i.id=id;i.placeholder=ph;i.type=type;
-    });
-    txt(sheet.appendChild(el('label')),'수업 시간');
+    sheet.appendChild(mk('h3','','회원 등록'));
+    sheet.appendChild(mk('div','shsub',tr?tr.name+' 트레이너':''));
+
+    sheet.appendChild(mk('label','','이름'));
+    const ni=sheet.appendChild(el('input'));ni.id='mb-n';ni.placeholder='홍길동';
+    sheet.appendChild(mk('label','','연락처'));
+    const pi=sheet.appendChild(el('input'));pi.id='mb-p';pi.placeholder='010-0000-0000';pi.type='tel';
+
+    sheet.appendChild(mk('label','','수업 시간'));
     const dsel=sheet.appendChild(el('select'));dsel.id='mb-d';
     [{v:25,l:'25분'},{v:50,l:'50분'}].forEach(opt=>{const o=dsel.appendChild(document.createElement('option'));o.value=opt.v;o.textContent=opt.l;});
+
+    sheet.appendChild(mk('label','','수업 횟수'));
+    const sessWrap=sheet.appendChild(el('div'));sessWrap.id='sw';
+
+    sheet.appendChild(mk('label','','금액'));
+    const priceWrap=sheet.appendChild(el('div'));priceWrap.id='pw';
+
+    function buildSess(){
+      const dur=parseInt(dsel.value);
+      const pkgs=packages.filter(p=>p.duration===dur);
+      const sw=document.getElementById('sw');sw.innerHTML='';
+      if(!pkgs.length){
+        const inp=sw.appendChild(el('input'));inp.type='number';inp.id='mb-s';inp.placeholder='횟수 직접 입력';
+        inp.style.cssText='width:100%;padding:13px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;';
+        inp.oninput=buildPrice;
+      } else {
+        const uniq=[...new Set(pkgs.map(p=>p.sessions))].sort((a,b)=>a-b);
+        const sel=sw.appendChild(el('select'));sel.id='mb-s';
+        sel.style.cssText='width:100%;padding:13px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;';
+        uniq.forEach(s=>{const o=sel.appendChild(document.createElement('option'));o.value=s;o.textContent=s+'회';});
+        sel.onchange=buildPrice;
+      }
+      buildPrice();
+    }
+
+    function buildPrice(){
+      const dur=parseInt(dsel.value);
+      const se=document.getElementById('mb-s');
+      const sess=se?parseInt(se.value):0;
+      const pw=document.getElementById('pw');pw.innerHTML='';
+      const match=packages.filter(p=>p.duration===dur&&p.sessions===sess);
+      if(!match.length){
+        const inp=pw.appendChild(el('input'));inp.type='number';inp.id='mb-pr';inp.placeholder='총 금액 직접 입력 (원)';
+        inp.style.cssText='width:100%;padding:13px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;';
+      } else if(match.length===1){
+        const div=pw.appendChild(el('div','pkg-auto'));div.textContent=match[0].price.toLocaleString()+'원';
+        const hi=pw.appendChild(el('input'));hi.type='hidden';hi.id='mb-pr';hi.value=match[0].price;
+      } else {
+        const sel=pw.appendChild(el('select'));sel.id='mb-pr';
+        sel.style.cssText='width:100%;padding:13px 14px;border:1px solid var(--bd2);border-radius:10px;background:var(--bg2);color:var(--t1);font-size:15px;';
+        match.forEach(p=>{const o=sel.appendChild(document.createElement('option'));o.value=p.price;o.textContent=p.price.toLocaleString()+'원';});
+      }
+    }
+
+    dsel.onchange=buildSess;buildSess();
+
     const btns=sheet.appendChild(el('div','shbtns'));
-    btns.appendChild(el('button','shno')).onclick=close;btns.lastChild.textContent='취소';
+    const cc=btns.appendChild(el('button','shno'));cc.textContent='취소';cc.onclick=close;
     const ok=btns.appendChild(el('button','shok'));ok.textContent='등록';
     ok.onclick=()=>{
       const name=(document.getElementById('mb-n').value||'').trim();
       if(!name){alert('이름을 입력해주세요.');return;}
       const phone=(document.getElementById('mb-p').value||'').trim();
-      const total=parseInt(document.getElementById('mb-s').value)||0;
-      const price=parseInt(document.getElementById('mb-pr').value)||0;
-      const dur=parseInt(document.getElementById('mb-d').value)||50;
-      members.push({id:'m'+Date.now(),trainerId:tid,name,phone,totalSessions:total,pricePerSession:price,duration:dur,registeredAt:Date.now()});
-      sv('og7_mb',members);close();renderMem();
+      const dur=parseInt(dsel.value);
+      const se=document.getElementById('mb-s');const total=se?parseInt(se.value)||0:0;
+      const pe=document.getElementById('mb-pr');const totalPrice=pe?parseInt(pe.value)||0:0;
+      const pps=total>0?Math.round(totalPrice/total):0;
+      members.push({id:'m'+Date.now(),trainerId:tid,name,phone,duration:dur,totalSessions:total,totalPrice,pricePerSession:pps,registeredAt:Date.now()});
+      sv('og8_mb',members);close();renderMem();
     };
   });
 }
 
-// --- CSV DOWNLOAD ---
+// CSV
 function dlCSV(tid,year,month){
   const tr=trainers.find(t=>t.id===tid);if(!tr)return;
-  const msl=slots.filter(s=>{
-    if(s.trainerId!==tid)return false;
-    const pts=s.date.split('-').map(Number);
-    return pts[0]===year&&pts[1]===month;
-  }).sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
-  let csv='\uFEFF트레이너: '+tr.name+'\n'+year+'년 '+month+'월\n\n';
-  csv+='날짜,요일,시간,일정유형,회원명,수업시간,단가,메모\n';
+  const msl=slots.filter(s=>{if(s.trainerId!==tid)return false;const p=s.date.split('-').map(Number);return p[0]===year&&p[1]===month;}).sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+  let csv='\uFEFF트레이너: '+tr.name+'\n'+year+'년 '+month+'월\n\n날짜,요일,시간,일정유형,회원명,수업시간,단가,메모\n';
   let total=0;
   msl.forEach(s=>{
-    const pts=s.date.split('-').map(Number);
-    const d=new Date(pts[0],pts[1]-1,pts[2]);
-    const dow=['일','월','화','수','목','금','토'][d.getDay()];
+    const p=s.date.split('-').map(Number);const d=new Date(p[0],p[1]-1,p[2]);const dow=['일','월','화','수','목','금','토'][d.getDay()];
     const mb=s.memberId?members.find(m=>m.id===s.memberId):null;
-    const price=mb?mb.pricePerSession:0;
-    total+=price;
+    const price=mb&&s.type!=='OT'?mb.pricePerSession:0;total+=price;
     csv+=s.date+','+dow+','+s.time+','+s.type+','+(mb?mb.name:'')+(mb?','+mb.duration+'분':',')+(price?','+price.toLocaleString():',' )+(s.memo?','+s.memo:',')+'\n';
   });
   csv+='\n총 '+msl.length+'회 / 합계 '+total.toLocaleString()+'원\n\n유형별 요약\n';
   TYPES.forEach(type=>{
     const ts=msl.filter(s=>s.type===type);if(!ts.length)return;
-    const sum=ts.reduce((a,s)=>{const mb=s.memberId?members.find(m=>m.id===s.memberId):null;return a+(mb?mb.pricePerSession:0);},0);
-    csv+=type+','+ts.length+'회,'+sum.toLocaleString()+'원\n';
+    const sum=ts.reduce((a,s)=>{const mb=s.memberId?members.find(m=>m.id===s.memberId):null;return a+(mb&&type!=='OT'?mb.pricePerSession:0);},0);
+    csv+=type+','+ts.length+'회,'+(sum?sum.toLocaleString()+'원':'차감없음')+'\n';
   });
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download=tr.name+'_'+year+'년'+month+'월.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
-// --- ADMIN ---
+// ADMIN
 function renderAdm(){
-  const ct=document.getElementById('pg-adm').querySelector('.pad');
-  ct.innerHTML='';
+  const ct=document.getElementById('pg-adm').querySelector('.pad');ct.innerHTML='';
   if(!isAdmin){
-    const lb=ct.appendChild(el('div','lockbox'));
-    txt(lb.appendChild(el('p')),'관리자만 접근할 수 있습니다.');
-    const btn=lb.appendChild(el('button'));btn.textContent='관리자 로그인';
-    btn.onclick=()=>{
-      const pw=prompt('관리자 비밀번호:');
-      if(pw===null)return;
-      if(pw===adminPw){isAdmin=true;renderAdm();}
-      else alert('비밀번호가 올바르지 않습니다.');
-    };
+    const lb=ct.appendChild(el('div','lockbox'));lb.appendChild(mk('p','','관리자만 접근할 수 있습니다.'));
+    const btn=lb.appendChild(mk('button','','관리자 로그인'));
+    btn.onclick=()=>{const pw=prompt('관리자 비밀번호:');if(pw===null)return;if(pw===adminPw){isAdmin=true;renderAdm();}else alert('비밀번호가 올바르지 않습니다.');};
     return;
   }
   const bar=ct.appendChild(el('div','adminbar'));
-  txt(bar.appendChild(el('span','abadge')),'관리자 모드');
-  const out=bar.appendChild(el('button','aout'));out.textContent='나가기';out.onclick=()=>{isAdmin=false;renderAdm();};
-  // 직원 추가
-  txt(ct.appendChild(el('div','sec')),'직원 추가');
+  bar.appendChild(mk('span','abadge','관리자 모드'));
+  const out=bar.appendChild(mk('button','aout','나가기'));out.onclick=()=>{isAdmin=false;renderAdm();};
+
+  // 서브탭
+  const stbar=ct.appendChild(el('div','admsubtabs'));
+  [['staff','직원'],['pkg','패키지'],['prices','회원단가']].forEach(([id,lbl])=>{
+    const btn=stbar.appendChild(mk('button','admsubtab'+(admSubTab===id?' on':''),lbl));
+    btn.onclick=()=>{admSubTab=id;renderAdm();};
+  });
+
+  if(admSubTab==='staff') renderAdmStaff(ct);
+  else if(admSubTab==='pkg') renderAdmPkg(ct);
+  else renderAdmPrices(ct);
+}
+
+function renderAdmStaff(ct){
+  ct.appendChild(mk('div','sec','직원 추가'));
   const form=ct.appendChild(el('div','sform'));
   const ni=form.appendChild(el('input'));ni.id='st-n';ni.placeholder='이름';
-  const r2=form.appendChild(el('div','r2'));
-  const ri=r2.appendChild(el('select'));ri.id='st-r';
-  ROLES.forEach(r=>{const o=ri.appendChild(document.createElement('option'));o.value=r;o.textContent=r;});
-  const ci=r2.appendChild(el('select'));ci.id='st-c';
-  COLORS.forEach((_,i)=>{const o=ci.appendChild(document.createElement('option'));o.value=i;o.textContent=CNAMES[i];if(i===newColor)o.selected=true;});
+  const r2a=form.appendChild(el('div','r2'));
+  const ri=r2a.appendChild(el('select'));ri.id='st-r';ROLES.forEach(r=>{const o=ri.appendChild(document.createElement('option'));o.value=r;o.textContent=r;});
+  const ci=r2a.appendChild(el('select'));ci.id='st-c';COLORS.forEach((_,i)=>{const o=ci.appendChild(document.createElement('option'));o.value=i;o.textContent=CNAMES[i];if(i===newColor)o.selected=true;});
   ci.onchange=e=>newColor=parseInt(e.target.value);
   const pi=form.appendChild(el('input'));pi.id='st-p';pi.placeholder='연락처';pi.type='tel';
   const si=form.appendChild(el('input'));si.id='st-s';si.placeholder='사번 (로그인 번호)';
-  const ab=form.appendChild(el('button','sbtn'));ab.textContent='+ 등록';ab.onclick=addStaff;
-  // 직원 목록
-  txt(ct.appendChild(el('div','sec')),'등록된 직원');
+  const ab=form.appendChild(mk('button','sbtn','+ 등록'));ab.onclick=addStaff;
+
+  ct.appendChild(mk('div','sec','등록된 직원'));
   trainers.forEach(tr=>{
     const col=COLORS[tr.color%COLORS.length];
     const card=ct.appendChild(el('div','stcard'));
     const av=card.appendChild(el('div','stav'));av.style.cssText='background:'+col.bg+';color:'+col.text+';';av.textContent=initials(tr.name);
     const info=card.appendChild(el('div','stinfo'));
-    txt(info.appendChild(el('div','stnm')),tr.name);
-    txt(info.appendChild(el('div','strl')),tr.role+(tr.phone?' · '+tr.phone:'')+(tr.saban?' · 사번: '+tr.saban:''));
-    const dd=card.appendChild(el('button','stdel'));dd.textContent='×';
-    dd.onclick=()=>{if(confirm(tr.name+' 삭제?')){trainers=trainers.filter(x=>x.id!==tr.id);sv('og7_tr',trainers);renderAdm();}};
+    info.appendChild(mk('div','stnm',tr.name));
+    info.appendChild(mk('div','strl',tr.role+(tr.phone?' · '+tr.phone:'')+(tr.saban?' · 사번: '+tr.saban:'')));
+    const dd=card.appendChild(mk('button','stdel','×'));
+    dd.onclick=()=>{if(confirm(tr.name+' 삭제?')){trainers=trainers.filter(x=>x.id!==tr.id);sv('og8_tr',trainers);renderAdm();}};
   });
-  // 회원 단가 수정
-  txt(ct.appendChild(el('div','sec')),'회원 단가 수정');
+  const pw=ct.appendChild(mk('button','pwbtn','관리자 비밀번호 변경'));
+  pw.onclick=()=>{const np=prompt('새 비밀번호:');if(np&&np.trim()){adminPw=np.trim();localStorage.setItem('og8_pw',adminPw);alert('변경되었습니다.');}};
+}
+
+function renderAdmPkg(ct){
+  ct.appendChild(mk('div','sec','패키지 추가'));
+  const form=ct.appendChild(el('div','sform'));
+  const dsel=form.appendChild(el('select'));dsel.id='pk-d';
+  [{v:25,l:'25분 수업'},{v:50,l:'50분 수업'}].forEach(opt=>{const o=dsel.appendChild(document.createElement('option'));o.value=opt.v;o.textContent=opt.l;});
+  const r2b=form.appendChild(el('div','r2'));
+  const si=r2b.appendChild(el('input'));si.id='pk-s';si.placeholder='횟수 (예: 10)';si.type='number';
+  const pi=r2b.appendChild(el('input'));pi.id='pk-p';pi.placeholder='총 금액 (예: 450000)';pi.type='number';
+  const ab=form.appendChild(mk('button','sbtn','+ 패키지 추가'));
+  ab.onclick=()=>{
+    const dur=parseInt(dsel.value);
+    const sess=parseInt(si.value||'0');
+    const price=parseInt(pi.value||'0');
+    if(!sess||!price){alert('횟수와 금액을 입력해주세요.');return;}
+    packages.push({id:'p'+Date.now(),duration:dur,sessions:sess,price});
+    sv('og8_pkg',packages);si.value='';pi.value='';renderAdm();
+  };
+
+  [25,50].forEach(dur=>{
+    const pkgs=packages.filter(p=>p.duration===dur);
+    ct.appendChild(mk('div','sec',dur+'분 수업 패키지'));
+    if(!pkgs.length){ct.appendChild(mk('div','','등록된 패키지가 없습니다.')).style.cssText='color:#555;font-size:13px;padding:4px 0 12px;';return;}
+    pkgs.sort((a,b)=>a.sessions-b.sessions).forEach(p=>{
+      const card=ct.appendChild(el('div','pkgcard'));
+      const info=card.appendChild(el('div'));
+      info.appendChild(mk('div','pkginfo',p.sessions+'회권'));
+      info.appendChild(mk('div','pkgprice',p.price.toLocaleString()+'원 (회당 '+Math.round(p.price/p.sessions).toLocaleString()+'원)'));
+      const dd=card.appendChild(mk('button','pkgdel','삭제'));
+      dd.onclick=()=>{if(confirm('패키지 삭제?')){packages=packages.filter(x=>x.id!==p.id);sv('og8_pkg',packages);renderAdm();}};
+    });
+  });
+}
+
+function renderAdmPrices(ct){
+  ct.appendChild(mk('div','sec','회원 단가 수정'));
+  let hasAny=false;
   trainers.forEach(tr=>{
     const myM=members.filter(m=>m.trainerId===tr.id);if(!myM.length)return;
-    const pc=ct.appendChild(el('div','prcard'));
-    txt(pc.appendChild(el('div','prhdr')),tr.name);
+    hasAny=true;
+    const pc=ct.appendChild(el('div','prcard'));pc.appendChild(mk('div','prhdr',tr.name));
     myM.forEach(m=>{
       const row=pc.appendChild(el('div','prrow'));
-      txt(row.appendChild(el('div','prlbl')),m.name);
+      row.appendChild(mk('div','prlbl',m.name));
       const inp=row.appendChild(el('input','prinp'));inp.type='number';inp.value=m.pricePerSession||0;inp.id='pr-'+m.id;
-      txt(row.appendChild(el('div','prunit')),'원/회');
+      row.appendChild(mk('div','prunit','원/회'));
     });
-    const sb=pc.appendChild(el('button','prsave'));sb.textContent='저장';
-    sb.onclick=()=>{myM.forEach(m=>{const i=document.getElementById('pr-'+m.id);if(i)m.pricePerSession=parseInt(i.value)||0;});sv('og7_mb',members);alert('저장되었습니다.');};
+    const sb=pc.appendChild(mk('button','prsave','저장'));
+    sb.onclick=()=>{myM.forEach(m=>{const i=document.getElementById('pr-'+m.id);if(i){m.pricePerSession=parseInt(i.value)||0;m.totalPrice=m.pricePerSession*m.totalSessions;}});sv('og8_mb',members);alert('저장되었습니다.');};
   });
-  const pw=ct.appendChild(el('button','pwbtn'));pw.textContent='관리자 비밀번호 변경';
-  pw.onclick=()=>{const np=prompt('새 비밀번호:');if(np&&np.trim()){adminPw=np.trim();localStorage.setItem('og7_pw',adminPw);alert('변경되었습니다.');}};
+  if(!hasAny)ct.appendChild(mk('div','','등록된 회원이 없습니다.')).style.cssText='color:#555;font-size:13px;padding:1rem 0;';
 }
+
 function addStaff(){
   const name=(document.getElementById('st-n').value||'').trim();
   const role=document.getElementById('st-r').value;
@@ -656,80 +705,65 @@ function addStaff(){
   if(!name){alert('이름을 입력해주세요.');return;}
   if(!saban){alert('사번을 입력해주세요.');return;}
   if(trainers.some(t=>t.saban===saban)){alert('이미 사용 중인 사번입니다.');return;}
-  trainers.push({id:'t'+Date.now(),name,role,phone,saban,color});
-  sv('og7_tr',trainers);renderAdm();
+  trainers.push({id:'t'+Date.now(),name,role,phone,saban,color});sv('og8_tr',trainers);renderAdm();
 }
 
-// --- LOGIN ---
+// LOGIN
 function openLogin(){
-  if(curUser){if(confirm('로그아웃 하시겠습니까?')){curUser=null;sv('og7_cu',null);updChip();}return;}
+  if(curUser){if(confirm('로그아웃 하시겠습니까?')){curUser=null;sv('og8_cu',null);updChip();}return;}
   showSheet(function(sheet,close){
-    sheet.appendChild(el('div','shdl'));
-    txt(sheet.appendChild(el('h3')),'로그인');
-    txt(sheet.appendChild(el('div','shsub')),'이름 선택 후 사번 입력');
+    sheet.appendChild(el('div','shdl'));sheet.appendChild(mk('h3','','로그인'));sheet.appendChild(mk('div','shsub','이름 선택 후 사번 입력'));
     let selId=null;
     const nml=sheet.appendChild(el('div','nmlist'));
     trainers.forEach(tr=>{
       const col=COLORS[tr.color%COLORS.length];
-      const btn=nml.appendChild(el('button','nmbtn'));
+      const btn=nml.appendChild(el('button','nmbtn'));btn.id='nb-'+tr.id;
       const av=btn.appendChild(el('div','nmav'));av.style.cssText='background:'+col.bg+';color:'+col.text+';';av.textContent=initials(tr.name);
-      const inf=btn.appendChild(el('div','nminf'));
-      txt(inf.appendChild(document.createElement('span')),tr.name);
-      txt(inf.appendChild(el('div','nmrl')),tr.role);
-      btn.onclick=()=>{
-        selId=tr.id;
-        nml.querySelectorAll('.nmbtn').forEach(b=>b.style.borderColor='');
-        btn.style.borderColor=col.dot;
-        sbi.focus();
-      };
+      const inf=btn.appendChild(el('div','nminf'));inf.appendChild(document.createTextNode(tr.name));inf.appendChild(mk('div','nmrl',tr.role));
+      btn.onclick=()=>{selId=tr.id;nml.querySelectorAll('.nmbtn').forEach(b=>b.style.borderColor='');btn.style.borderColor=col.dot;sbi.focus();};
     });
-    txt(sheet.appendChild(el('label')),'사번');
+    sheet.appendChild(mk('label','','사번'));
     const sbi=sheet.appendChild(el('input'));sbi.placeholder='예: 0001';
     sbi.onkeydown=e=>{if(e.key==='Enter')doLogin();};
     const btns=sheet.appendChild(el('div','shbtns'));
-    btns.appendChild(el('button','shno')).onclick=close;btns.lastChild.textContent='취소';
-    const ok=btns.appendChild(el('button','shok'));ok.textContent='로그인';ok.onclick=doLogin;
+    btns.appendChild(mk('button','shno','취소')).onclick=close;
+    btns.appendChild(mk('button','shok','로그인')).onclick=doLogin;
     function doLogin(){
       if(!selId){alert('이름을 선택해주세요.');return;}
-      const tr=trainers.find(t=>t.id===selId);
-      if(!tr)return;
+      const tr=trainers.find(t=>t.id===selId);if(!tr)return;
       if(sbi.value.trim()!==tr.saban){alert('사번이 올바르지 않습니다.');return;}
-      curUser=selId;sv('og7_cu',curUser);close();updChip();
+      curUser=selId;sv('og8_cu',curUser);close();updChip();
     }
   });
 }
 
-// --- NOTICE ---
+// NOTICE
 function renderNotice(){
-  const ct=document.getElementById('pg-not').querySelector('.pad');
-  ct.innerHTML='';
+  const ct=document.getElementById('pg-not').querySelector('.pad');ct.innerHTML='';
   const comp=ct.appendChild(el('div','ncomp'));
   const ta=comp.appendChild(el('textarea'));ta.id='n-b';ta.placeholder='공지 내용을 입력하세요...';
   const row=comp.appendChild(el('div','ncrow'));
   const ai=row.appendChild(el('input'));ai.id='n-a';ai.placeholder='작성자 이름';
   if(curUser){const tr=trainers.find(t=>t.id===curUser);if(tr)ai.value=tr.name;}
-  const pb=row.appendChild(el('button','npost'));pb.textContent='등록';pb.onclick=postNotice;
+  row.appendChild(mk('button','npost','등록')).onclick=postNotice;
   const pr=comp.appendChild(el('div','npinrow'));
   const pc=pr.appendChild(el('input'));pc.type='checkbox';pc.id='n-p';
   const pl=pr.appendChild(el('label'));pl.htmlFor='n-p';pl.textContent='상단 고정';
-  txt(ct.appendChild(el('div','sec')),'공지사항');
+  ct.appendChild(mk('div','sec','공지사항'));
   const sorted=[...notices].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||b.ts-a.ts);
-  if(!sorted.length){txt(ct.appendChild(el('div','nempty')),'등록된 공지가 없습니다.');}
+  if(!sorted.length){ct.appendChild(mk('div','nempty','등록된 공지가 없습니다.'));}
   sorted.forEach(n=>{
     const card=ct.appendChild(el('div','ncard'));
-    if(n.pinned)txt(card.appendChild(el('div','npinbdg')),'📌 고정');
+    if(n.pinned)card.appendChild(mk('div','npinbdg','📌 고정'));
     const hdr=card.appendChild(el('div','nchdr'));
     const aw=hdr.appendChild(el('div','ncauth'));
     const tr2=trainers.find(t=>t.name===n.author);
     const av=aw.appendChild(el('div','ncav'));
     if(tr2){const col=COLORS[tr2.color%COLORS.length];av.style.cssText='background:'+col.bg+';color:'+col.text+';';av.textContent=initials(tr2.name);}
     else{av.style.cssText='background:#252525;color:#888;';av.textContent=(n.author||'?')[0].toUpperCase();}
-    const ai2=aw.appendChild(el('div'));
-    txt(ai2.appendChild(el('div','ncnm')),n.author||'익명');
-    txt(ai2.appendChild(el('div','ncdt')),fmtTs(n.ts));
-    const db=hdr.appendChild(el('button','ncdel'));db.textContent='×';
-    db.onclick=()=>{if(confirm('삭제?')){notices=notices.filter(x=>x.id!==n.id);sv('og7_nt',notices);renderNotice();}};
-    txt(card.appendChild(el('div','nbody')),n.body);
+    const ai2=aw.appendChild(el('div'));ai2.appendChild(mk('div','ncnm',n.author||'익명'));ai2.appendChild(mk('div','ncdt',fmtTs(n.ts)));
+    hdr.appendChild(mk('button','ncdel','×')).onclick=()=>{if(confirm('삭제?')){notices=notices.filter(x=>x.id!==n.id);sv('og8_nt',notices);renderNotice();}};
+    card.appendChild(mk('div','nbody',n.body));
   });
 }
 function postNotice(){
@@ -738,13 +772,12 @@ function postNotice(){
   const pinned=document.getElementById('n-p').checked;
   if(!body)return;
   notices.unshift({id:'n'+Date.now(),body,author:author||'익명',pinned,ts:Date.now()});
-  sv('og7_nt',notices);renderNotice();
+  sv('og8_nt',notices);renderNotice();
 }
 
-// --- SHEET HELPER ---
+// SHEET HELPER
 function showSheet(builder){
-  const sc=document.getElementById('sheet-root');
-  sc.innerHTML='';
+  const sc=document.getElementById('sr');sc.innerHTML='';
   const ov=sc.appendChild(el('div','overlay'));
   const sheet=ov.appendChild(el('div','sheet'));
   function close(){sc.innerHTML='';}
@@ -753,9 +786,7 @@ function showSheet(builder){
 }
 
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
-updChip();
-renderDays();
-renderTimes();
+updChip();renderDays();renderTimes();
 </script>
 </body>
 </html>
