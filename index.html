@@ -284,24 +284,29 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDfhwH78E308KWi_rt0Ecz411NF_IC1a8g",
-  authDomain: "orangegolfzone.firebaseapp.com",
-  projectId: "orangegolfzone",
-  storageBucket: "orangegolfzone.firebasestorage.app",
-  messagingSenderId: "433401923121",
-  appId: "1:433401923121:web:e0488281021380bd037710",
-  measurementId: "G-FWH9JR3JNK"
-};
-
+// ── Firebase 동적 로딩 ──
 let db = null;
-try {
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.firestore();
-  console.log('Firebase 연결 성공');
-} catch(e) {
-  console.warn('Firebase 초기화 실패:', e);
+function loadFirebaseSDK(cb){
+  if(typeof firebase!=='undefined'){initFB();cb();return;}
+  var s1=document.createElement('script');
+  s1.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+  s1.onload=function(){
+    var s2=document.createElement('script');
+    s2.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js';
+    s2.onload=function(){initFB();cb();};
+    s2.onerror=function(){console.warn('Firestore 로드 실패');cb();};
+    document.head.appendChild(s2);
+  };
+  s1.onerror=function(){console.warn('Firebase 로드 실패');cb();};
+  document.head.appendChild(s1);
+}
+function initFB(){
+  try{
+    var cfg={apiKey:"AIzaSyDfhwH78E308KWi_rt0Ecz411NF_IC1a8g",authDomain:"orangegolfzone.firebaseapp.com",projectId:"orangegolfzone",storageBucket:"orangegolfzone.firebasestorage.app",messagingSenderId:"433401923121",appId:"1:433401923121:web:e0488281021380bd037710"};
+    if(!firebase.apps.length)firebase.initializeApp(cfg);
+    db=firebase.firestore();
+    console.log('Firebase 연결 성공 ✅');
+  }catch(e){console.warn('Firebase 초기화 실패:',e.message);}
 }
 </script>
 </head>
@@ -1251,6 +1256,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').cat
 
 // Firebase 데이터 로드 후 앱 시작
 (async function(){
+  await new Promise(resolve=>loadFirebaseSDK(resolve));
   try{
     // 로딩 표시
     const gate=document.getElementById('gate');
