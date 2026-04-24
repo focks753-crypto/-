@@ -53,8 +53,8 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .chip.on{border-color:transparent;color:#000;}
 
 /* ── TABS ── */
-.tabs{flex-shrink:0;display:flex;gap:6px;padding:9px 14px;background:var(--bg0);border-bottom:1px solid var(--bd);}
-.tab{flex:1;padding:9px 4px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:var(--bg2);color:var(--t3);}
+.tabs{flex-shrink:0;display:flex;gap:5px;padding:9px 10px;background:var(--bg0);border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none;}.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:9px 12px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:var(--bg2);color:var(--t3);white-space:nowrap;}
 .tab.on{background:#fff;color:#000;}
 
 /* ── PAGES + ANIMATION ── */
@@ -264,6 +264,41 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .img-preview-item img{width:100%;height:100%;object-fit:cover;border-radius:6px;}
 .img-preview-del{position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#e05555;border-radius:50%;border:none;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
 
+
+/* ── 매출 ── */
+.sal-filters{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.sal-mode-tabs{display:flex;gap:0;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:6px;}
+.sal-mtab{flex:1;padding:9px 6px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:transparent;color:var(--t3);text-align:center;white-space:nowrap;}
+.sal-mtab.on{background:#fff;color:#000;}
+.sal-mode-desc{font-size:11px;color:var(--t4);text-align:center;padding:0 0 8px;}
+.sal-period-tabs{display:flex;gap:5px;}
+.sal-ptab{flex:1;padding:9px 4px;border-radius:9px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:var(--bg2);color:var(--t3);}
+.sal-ptab.on{background:#fff;color:#000;}
+.sal-row{display:flex;gap:8px;align-items:center;}
+.sal-row input[type=date],.sal-row select{flex:1;padding:10px 12px;border:1px solid var(--bd2);border-radius:9px;background:var(--bg2);color:var(--t1);font-size:14px;font-weight:500;letter-spacing:0.3px;}
+.sal-row input[type=text]{flex:1;padding:10px 12px;border:1px solid var(--bd2);border-radius:9px;background:var(--bg2);color:var(--t1);font-size:13px;}
+.sal-row input::placeholder{color:var(--t4);}
+.sal-search-btn{padding:10px 14px;border-radius:9px;border:none;background:var(--bg3);color:var(--t2);font-size:13px;cursor:pointer;}
+.sal-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;}
+.sal-card{background:var(--bg1);border:1px solid var(--bd);border-radius:12px;padding:14px 10px;text-align:center;}
+.sal-card-val{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:4px;}
+.sal-card-lbl{font-size:10px;color:var(--t3);}
+.sal-chart-wrap{background:var(--bg1);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:14px;}
+.sal-chart-title{font-size:13px;font-weight:600;color:var(--t2);margin-bottom:10px;}
+.sal-canvas{width:100%;display:block;border-radius:6px;}
+.sal-dl-btn{width:100%;padding:12px;background:var(--bg2);border:1px solid var(--bd2);border-radius:10px;color:var(--t2);font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px;}
+.sal-dl-btn:active{background:var(--bg3);}
+.sal-table-wrap{background:var(--bg1);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.sal-table{width:100%;border-collapse:collapse;font-size:12px;}
+.sal-table th{background:var(--bg2);color:var(--t3);padding:10px 8px;text-align:left;font-weight:600;border-bottom:1px solid var(--bd);}
+.sal-table td{padding:9px 8px;border-bottom:1px solid var(--bd);color:var(--t2);}
+.sal-table tr:last-child td{border-bottom:none;}
+.sal-table .amount{color:var(--t1);font-weight:600;text-align:right;}
+.sal-table .total-row{background:var(--bg2);}
+.sal-table .total-row td{font-weight:700;color:var(--t1);}
+.sal-empty{text-align:center;padding:2rem;color:var(--t4);font-size:13px;}
+.sal-tr-section{font-size:11px;color:var(--t4);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;padding:8px 8px 4px;background:var(--bg2);}
+
 /* ── CALENDAR ── */
 .calbg{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
 .calbox{background:var(--bg1);border:1px solid var(--bd2);border-radius:18px;padding:20px;width:100%;max-width:340px;}
@@ -352,6 +387,7 @@ function initFB(){
     <button class="tab" id="tb-mem" onclick="switchTab('mem')">회원관리</button>
     <button class="tab" id="tb-not" onclick="switchTab('not')">공지</button>
     <button class="tab" id="tb-adm" onclick="switchTab('adm')">관리</button>
+  <button class="tab" id="tb-sal" onclick="switchTab('sal')">매출</button>
   </div>
   <div class="pg show" id="pg-sch">
     <div class="day-wrap">
@@ -373,6 +409,7 @@ function initFB(){
   <div class="pg" id="pg-mem"><div class="pad"></div></div>
   <div class="pg" id="pg-not"><div class="pad"></div></div>
   <div class="pg" id="pg-adm"><div class="pad"></div></div>
+<div class="pg" id="pg-sal"><div class="pad"></div></div>
   <button class="fab" id="fab" onclick="reqLogin(()=>openAddSheet())">+</button>
   <div id="cal-cont"></div>
   <div id="sr"></div>
@@ -402,8 +439,9 @@ const TIMES=genTimes();
 function ld(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
 function sv(k,v){
   try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}
-  // Firebase에도 동기화
-  if(db){
+  // Firebase에도 동기화 (개인 기기 전용 키는 제외)
+  const noSync=['og11_cv','og10_cu','og10_cc'];
+  if(db && !noSync.includes(k)){
     const docKey=k.replace(/[^a-zA-Z0-9_]/g,'_');
     db.collection('og_data').doc(docKey).set({value:JSON.stringify(v),ts:Date.now()}).catch(()=>{});
   }
@@ -413,7 +451,7 @@ function sv(k,v){
 
 // 모든 로컬 데이터를 Firebase에 업로드
 async function pushAllToFirebase(){
-  if(!db)return;
+  if(!db) throw new Error('Firebase가 연결되지 않았습니다. 인터넷 연결을 확인해주세요.');
   const items=[
     {k:'og10_tr',v:trainers},
     {k:'og10_sl',v:slots},
@@ -421,12 +459,19 @@ async function pushAllToFirebase(){
     {k:'og10_nt',v:notices},
     {k:'og10_pkg',v:packages},
   ];
-  const batch=db.batch();
-  items.forEach(item=>{
-    const ref=db.collection('og_data').doc(item.k);
-    batch.set(ref,{value:JSON.stringify(item.v),ts:Date.now()});
-  });
-  await batch.commit();
+  // 개별 순차 저장 (batch 대신)
+  for(let i=0;i<items.length;i++){
+    await db.collection('og_data').doc(items[i].k).set({
+      value:JSON.stringify(items[i].v),
+      ts:Date.now()
+    });
+    console.log('업로드:', items[i].k, '('+(i+1)+'/'+items.length+')');
+  }
+}
+
+function getFirebaseStatus(){
+  if(!db)return '❌ 미연결';
+  return '✅ 연결됨';
 }
 
 async function loadFromFirebase(){
@@ -435,17 +480,13 @@ async function loadFromFirebase(){
     const keys=['og10_tr','og10_sl','og10_mb','og10_nt','og10_pkg','og10_cc','og11_cv'];
     const snap=await db.collection('og_data').get();
     let hasData=false;
+    const skipKeys=['og11_cv','og10_cu','og10_cc'];
     snap.forEach(doc=>{
-      const k=doc.id.replace(/_/g,c=>c); // docKey back to localStorage key
+      if(skipKeys.includes(doc.id))return; // 개인 기기 전용 키 제외
       const data=doc.data();
       if(data&&data.value){
-        // doc id를 원래 key로 변환
-        const origKey=doc.id.replace('og10_tr','og10_tr').replace('og10_sl','og10_sl')
-          .replace('og10_mb','og10_mb').replace('og10_nt','og10_nt')
-          .replace('og10_pkg','og10_pkg').replace('og10_cc','og10_cc')
-          .replace('og11_cv','og11_cv');
         try{
-          localStorage.setItem(origKey,data.value);
+          localStorage.setItem(doc.id,data.value);
           hasData=true;
         }catch(e){}
       }
@@ -461,7 +502,8 @@ function startRealtimeSync(){
     snap.docChanges().forEach(change=>{
       if(change.type==='modified'||change.type==='added'){
         const data=change.doc.data();
-        if(data&&data.value){
+        const skipKeys2=['og11_cv','og10_cu','og10_cc'];
+        if(data&&data.value&&!skipKeys2.includes(change.doc.id)){
           const id=change.doc.id;
           try{localStorage.setItem(id,data.value);}catch(e){}
           // 화면 자동 갱신
@@ -563,7 +605,7 @@ function updChip(){
 
 // ── TABS ──
 function switchTab(id){
-  ['sch','mem','not','adm'].forEach(x=>{
+  ['sch','mem','not','adm','sal'].forEach(x=>{
     document.getElementById('pg-'+x).classList.toggle('show',x===id);
     document.getElementById('tb-'+x).classList.toggle('on',x===id);
   });
@@ -571,6 +613,7 @@ function switchTab(id){
   if(id==='not')renderNotice();
   if(id==='mem'){mvTr=null;renderMem();}
   if(id==='adm')renderAdm();
+  if(id==='sal')renderSales();
 }
 
 // ── WEEK NAV ──
@@ -918,6 +961,301 @@ function dlCSV(tid,year,month){
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=tr.name+'_'+year+'년'+month+'월.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
+
+// ── 매출관리 ──────────────────────────────────────────────────────────────
+let salPeriod='daily';
+let salMode='sales'; // 'sales'=수업권판매, 'sessions'=수업진행
+let salStartDate='';let salEndDate='';let salTrainer='';let salSearch='';
+
+function initSalDates(){
+  const now=new Date();
+  const y=now.getFullYear(),m=now.getMonth();
+  if(!salStartDate)salStartDate=y+'-'+String(m+1).padStart(2,'0')+'-01';
+  if(!salEndDate){
+    const lastDay=new Date(y,m+1,0).getDate();
+    salEndDate=y+'-'+String(m+1).padStart(2,'0')+'-'+String(lastDay).padStart(2,'0');
+  }
+}
+
+function parseSalDate(str){
+  const p=str.split('-').map(Number);
+  return new Date(p[0],p[1]-1,p[2]);
+}
+
+function getSalLabel(dateStr){
+  if(salPeriod==='daily'){
+    const d=parseSalDate(dateStr);
+    return (d.getMonth()+1)+'/'+(d.getDate());
+  }
+  if(salPeriod==='weekly'){
+    const d=parseSalDate(dateStr);
+    const wn=getWeekNum(d);
+    return (d.getMonth()+1)+'월'+wn+'주';
+  }
+  if(salPeriod==='monthly'){
+    const p=dateStr.split('-');
+    return p[0]+'.'+(+p[1]);
+  }
+  return dateStr;
+}
+
+function getGroupKey(dateStr){
+  if(salPeriod==='daily')return dateStr;
+  if(salPeriod==='weekly'){
+    const d=parseSalDate(dateStr);
+    const wn=getWeekNum(d);
+    return d.getFullYear()+'-'+(d.getMonth()+1)+'-w'+wn;
+  }
+  if(salPeriod==='monthly'){
+    const p=dateStr.split('-');return p[0]+'-'+p[1];
+  }
+  return dateStr;
+}
+
+function computeSales(){
+  initSalDates();
+  const sd=parseSalDate(salStartDate),ed=parseSalDate(salEndDate);
+  ed.setHours(23,59,59);
+  // 기간에 따라 자동 그룹화
+  const diffDays=Math.ceil((ed-sd)/(1000*60*60*24));
+  salPeriod=diffDays<=31?'daily':diffDays<=90?'weekly':'monthly';
+  
+  const rows=[];
+
+  if(salMode==='sales'){
+    // 수업권 판매 기준: 구매일 × 총 금액
+    members.forEach(mb=>{
+      if(salTrainer&&mb.trainerId!==salTrainer)return;
+      if(salSearch&&!mb.name.includes(salSearch))return;
+      const tr=trainers.find(t=>t.id===mb.trainerId);
+      (mb.plans||[]).forEach(plan=>{
+        const pDate=new Date(plan.addedAt||0);
+        if(pDate<sd||pDate>ed)return;
+        const ds=pDate.getFullYear()+'-'+String(pDate.getMonth()+1).padStart(2,'0')+'-'+String(pDate.getDate()).padStart(2,'0');
+        rows.push({
+          date:ds,time:p2(pDate.getHours())+':'+p2(pDate.getMinutes()),
+          trainerId:mb.trainerId,trainerName:tr?tr.name:'?',
+          memberName:mb.name,type:plan.duration+'분',
+          planLabel:plan.sessions+'회권',revenue:plan.totalPrice||0,
+          groupKey:getGroupKey(ds),
+        });
+      });
+    });
+  } else {
+    // 수업 진행 기준: 슬롯 날짜 × 회당 단가
+    slots.forEach(s=>{
+      if(s.type==='OT')return;
+      if(!s.planId||!s.memberId)return;
+      if(salTrainer&&s.trainerId!==salTrainer)return;
+      const parts=s.date.split('-').map(Number);
+      const slotDate=new Date(parts[0],parts[1]-1,parts[2]);
+      if(slotDate<sd||slotDate>ed)return;
+      const mb=members.find(m=>m.id===s.memberId);
+      const plan=mb?(mb.plans||[]).find(p=>p.id===s.planId):null;
+      if(!plan)return;
+      if(salSearch&&mb&&!mb.name.includes(salSearch))return;
+      const tr=trainers.find(t=>t.id===s.trainerId);
+      rows.push({
+        date:s.date,time:s.time,
+        trainerId:s.trainerId,trainerName:tr?tr.name:'?',
+        memberName:mb?mb.name:'?',
+        type:s.type,planLabel:plan.sessions+'회권',
+        revenue:plan.pricePerSession||0,
+        groupKey:getGroupKey(s.date),
+      });
+    });
+  }
+  rows.sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+  
+  // 그룹별 집계
+  const grouped={};
+  rows.forEach(r=>{
+    if(!grouped[r.groupKey])grouped[r.groupKey]={key:r.groupKey,revenue:0,count:0,label:getSalLabel(r.date)};
+    grouped[r.groupKey].revenue+=r.revenue;
+    grouped[r.groupKey].count++;
+  });
+  
+  const totalRevenue=rows.reduce((s,r)=>s+r.revenue,0);
+  const totalSessions=rows.length;
+  const uniqueMembers=new Set(rows.map(r=>r.memberName)).size;
+  
+  return{rows,grouped,totalRevenue,totalSessions,uniqueMembers};
+}
+
+function renderSales(){
+  const ct=document.getElementById('pg-sal').querySelector('.pad');
+  ct.innerHTML='';
+  initSalDates();
+
+  // ─ 필터 ─
+  const fil=ct.appendChild(el('div','sal-filters'));
+  // 모드 토글
+  const modeWrap=fil.appendChild(el('div','sal-mode-tabs'));
+  [['sales','수업권 판매'],['sessions','수업 진행']].forEach(([v,l])=>{
+    const b=modeWrap.appendChild(mk('button','sal-mtab'+(salMode===v?' on':''),l));
+    b.onclick=()=>{salMode=v;renderSales();};
+  });
+  fil.appendChild(mk('div','sal-mode-desc',
+    salMode==='sales'?'수업권 구매 시점 · 실제 결제 금액':'수업 진행 날짜 · 회당 단가 합계'));
+
+  // 날짜 범위
+  const dr=fil.appendChild(el('div','sal-row'));
+  const sd1=dr.appendChild(el('input'));sd1.type='date';sd1.value=salStartDate;sd1.onchange=e=>salStartDate=e.target.value;
+  dr.appendChild(mk('span','','~')).style.cssText='color:#555;flex-shrink:0;';
+  const sd2=dr.appendChild(el('input'));sd2.type='date';sd2.value=salEndDate;sd2.onchange=e=>salEndDate=e.target.value;
+
+  // 트레이너 + 검색
+  const fr2=fil.appendChild(el('div','sal-row'));
+  const trsel=fr2.appendChild(el('select'));
+  trsel.appendChild(document.createElement('option')).textContent='전체 트레이너';
+  trainers.forEach(t=>{const o=trsel.appendChild(document.createElement('option'));o.value=t.id;o.textContent=t.name;if(t.id===salTrainer)o.selected=true;});
+  trsel.onchange=e=>salTrainer=e.target.value;
+  const srch=fr2.appendChild(el('input'));srch.type='text';srch.placeholder='회원명 검색';srch.value=salSearch;srch.oninput=e=>salSearch=e.target.value;
+  const qBtn=fil.appendChild(mk('button','','조회'));
+  qBtn.style.cssText='width:100%;padding:11px;border-radius:9px;border:none;background:#fff;color:#000;font-size:14px;font-weight:700;cursor:pointer;';
+  qBtn.onclick=renderSales;
+
+  // ─ 데이터 ─
+  const{rows,grouped,totalRevenue,totalSessions,uniqueMembers}=computeSales();
+  const isSes=salMode==='sessions';
+
+  // ─ 요약 카드 ─
+  const cards=ct.appendChild(el('div','sal-cards'));
+  [{val:totalRevenue.toLocaleString()+'원',lbl:isSes?'수업 진행 금액':'결제 매출'},
+   {val:totalSessions+(isSes?'회':'건'),lbl:isSes?'수업 횟수':'수업권 판매'},
+   {val:uniqueMembers+'명',lbl:'회원 수'}].forEach(c=>{
+    const card=cards.appendChild(el('div','sal-card'));
+    card.appendChild(mk('div','sal-card-val',c.val));
+    card.appendChild(mk('div','sal-card-lbl',c.lbl));
+  });
+
+  if(rows.length===0){ct.appendChild(mk('div','sal-empty','해당 기간 데이터가 없습니다.'));return;}
+
+  // ─ 엑셀 다운로드 ─
+  const dlBtn=ct.appendChild(mk('button','sal-dl-btn','엑셀 다운로드'));
+  dlBtn.onclick=()=>dlSalesCSV(rows,totalRevenue);
+
+  // ─ 상세 테이블 ─
+  const tWrap=ct.appendChild(el('div','sal-table-wrap'));
+  const tbl=tWrap.appendChild(el('table','sal-table'));
+  const thead=tbl.appendChild(el('thead'));
+  const hr=thead.appendChild(el('tr'));
+  (isSes?['날짜','시간','트레이너','회원','유형','권종','금액']:
+         ['등록일','시간','트레이너','회원','분','수업권','결제금액'])
+    .forEach(h=>hr.appendChild(mk('th','',h)));
+  const tbody=tbl.appendChild(el('tbody'));
+  rows.forEach(r=>{
+    const row=tbody.appendChild(el('tr'));
+    [r.date,r.time,r.trainerName,r.memberName,r.type,r.planLabel,'']
+      .forEach((v,i)=>{
+        if(i===6)row.appendChild(mk('td','amount',r.revenue?r.revenue.toLocaleString()+'원':''));
+        else row.appendChild(mk('td','',v));
+      });
+  });
+  const tfoot=tbl.appendChild(el('tfoot'));
+  const srow=tfoot.appendChild(el('tr','total-row'));
+  ['합계','','','',totalSessions+(isSes?'회':'건'),'',totalRevenue.toLocaleString()+'원']
+    .forEach((v,i)=>srow.appendChild(mk('td',i===6?'amount':'',v)));
+
+  // ─ 차트 (맨 아래) ─
+  const gKeys=Object.keys(grouped).sort();
+  if(gKeys.length>0){
+    const cWrap=ct.appendChild(el('div','sal-chart-wrap'));
+    const pLabel=salPeriod==='daily'?'일별':salPeriod==='weekly'?'주별':'월별';
+    cWrap.appendChild(mk('div','sal-chart-title',pLabel+' '+(isSes?'수업 진행':'수업권 판매')+' 매출'));
+    const canvas=cWrap.appendChild(el('canvas','sal-canvas'));
+    canvas.style.width='100%';
+    setTimeout(()=>drawSalChart(canvas,gKeys,grouped),80);
+  }
+}
+
+
+function drawSalChart(canvas,keys,grouped){
+  const W=canvas.width=canvas.offsetWidth||300;
+  const H=canvas.height=180;
+  const ctx=canvas.getContext('2d');
+  if(!ctx)return;
+  
+  const vals=keys.map(k=>grouped[k].revenue);
+  const maxVal=Math.max(...vals,1);
+  const pad={t:16,r:10,b:36,l:56};
+  const cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
+  const barW=Math.max(4,Math.min(32,cW/keys.length*0.6));
+  const step=cW/keys.length;
+  
+  // 배경
+  ctx.fillStyle='#1a1a1a';ctx.fillRect(0,0,W,H);
+  
+  // Y축 눈금
+  ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1;
+  [0,.25,.5,.75,1].forEach(p=>{
+    const y=pad.t+cH*(1-p);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();
+    ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='right';
+    const lv=Math.round(maxVal*p);
+    ctx.fillText(lv>=10000?(lv/10000).toFixed(1)+'만':''+lv,pad.l-4,y+3);
+  });
+  
+  // 바
+  const COLS=['#ab47bc','#7e57c2','#5c6bc0','#42a5f5','#26c6da','#26a69a','#66bb6a'];
+  const trIds=[...new Set(keys.flatMap(k=>Object.values(grouped[k])))];
+  
+  keys.forEach((k,i)=>{
+    const v=grouped[k].revenue;const barH=cH*(v/maxVal);
+    const x=pad.l+i*step+(step-barW)/2;const y=pad.t+cH-barH;
+    const grad=ctx.createLinearGradient(0,y,0,y+barH);
+    grad.addColorStop(0,'#ab47bc');grad.addColorStop(1,'#6a1b9a');
+    ctx.fillStyle=grad;
+    ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,barW,barH,3):ctx.rect(x,y,barW,barH);
+    ctx.fill();
+    
+    // 값 표시
+    if(barH>20){
+      ctx.fillStyle='#fff';ctx.font='bold 9px sans-serif';ctx.textAlign='center';
+      const txt=v>=10000?(v/10000).toFixed(0)+'만':''+v;
+      ctx.fillText(txt,x+barW/2,y+12);
+    }
+  });
+  
+  // X축 라벨
+  ctx.fillStyle='#666';ctx.font='10px sans-serif';ctx.textAlign='center';
+  const maxLabels=Math.floor(cW/28);
+  const skip=Math.ceil(keys.length/maxLabels);
+  keys.forEach((k,i)=>{
+    if(i%skip!==0&&i!==keys.length-1)return;
+    const x=pad.l+i*step+step/2;
+    ctx.fillText(grouped[k].label,x,H-pad.b+14);
+  });
+  
+  // 축선
+  ctx.strokeStyle='#333';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+}
+
+function dlSalesCSV(rows,total){
+  let csv='\uFEFF오렌지골프존아카데미 매출 내역 ('+(salMode==='sales'?'수업권 판매':'수업 진행')+')\n';
+  const period=salStartDate+' ~ '+salEndDate;
+  const trName=salTrainer?(trainers.find(t=>t.id===salTrainer)||{}).name||'':'전체';
+  csv+='기간: '+period+' / 트레이너: '+trName+'\n\n';
+  csv+='등록일,시간,트레이너,회원명,수업시간,수업권,결제금액(원)\n';
+  rows.forEach(r=>{
+    csv+=r.date+','+r.time+','+r.trainerName+','+r.memberName+','+r.type+','+r.planLabel+','+(r.revenue||'')+'\n';
+  });
+  csv+='\n합계,,,,'+rows.length+'회,,'+total.toLocaleString()+'\n';
+  
+  // 트레이너별 소계
+  const byTr={};
+  rows.forEach(r=>{if(!byTr[r.trainerName])byTr[r.trainerName]={cnt:0,sum:0};byTr[r.trainerName].cnt++;byTr[r.trainerName].sum+=r.revenue;});
+  csv+='\n트레이너별 요약\n트레이너,수업 수,매출\n';
+  Object.entries(byTr).forEach(([nm,d])=>{csv+=nm+','+d.cnt+'회,'+d.sum.toLocaleString()+'\n';});
+  
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;
+  a.download='매출내역_'+salStartDate+'_'+salEndDate+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
 // ── ADMIN ──
 function renderAdm(){
   const ct=document.getElementById('pg-adm').querySelector('.pad');ct.innerHTML='';
@@ -1036,16 +1374,33 @@ function renderAdmCode(ct){
   ct.appendChild(mk('div','sec','🔄 Firebase 실시간 동기화'));
   const fbBox=ct.appendChild(el('div','sform'));
   fbBox.appendChild(mk('div','','데이터가 다른 기기에 보이지 않으면 아래 버튼을 눌러주세요.')).style.cssText='font-size:12px;color:#666;';
+  // Firebase 연결 상태 표시
+  const fbStatus=fbBox.appendChild(mk('div','','Firebase: '+getFirebaseStatus()));
+  fbStatus.style.cssText='font-size:12px;padding:6px 0;color:#888;';
+
   const syncNowBtn=fbBox.appendChild(mk('button','sbtn','📤 지금 바로 모든 기기에 동기화'));
   syncNowBtn.onclick=async()=>{
-    syncNowBtn.textContent='업로드 중...';syncNowBtn.disabled=true;
+    // 상태 업데이트
+    fbStatus.textContent='Firebase: '+getFirebaseStatus();
+    if(!db){
+      alert('Firebase가 연결되지 않았습니다.\n\n해결방법:\n1. 인터넷 연결 확인\n2. 페이지 새로고침 후 다시 시도');
+      return;
+    }
+    syncNowBtn.textContent='⏳ 업로드 중...';syncNowBtn.disabled=true;
     try{
       await pushAllToFirebase();
-      syncNowBtn.textContent='✅ 동기화 완료!';
-      setTimeout(()=>{syncNowBtn.textContent='📤 지금 바로 모든 기기에 동기화';syncNowBtn.disabled=false;},2000);
+      fbStatus.textContent='Firebase: ✅ 동기화 완료!';
+      syncNowBtn.textContent='✅ 완료! 다른 기기를 새로고침하세요';
+      setTimeout(()=>{
+        syncNowBtn.textContent='📤 지금 바로 모든 기기에 동기화';
+        syncNowBtn.disabled=false;
+      },3000);
+      alert('동기화 완료! 다른 기기에서 앱을 새로고침해주세요.');
     }catch(e){
-      syncNowBtn.textContent='❌ 실패 - 다시 시도';syncNowBtn.disabled=false;
-      alert('동기화 실패: '+e.message);
+      syncNowBtn.textContent='❌ 실패 - 다시 시도';
+      syncNowBtn.disabled=false;
+      fbStatus.textContent='Firebase: ❌ '+e.message;
+      alert('동기화 실패:\n\n'+e.message+'\n\n해결방법:\n1. 페이지 새로고침\n2. 인터넷 연결 확인\n3. 콘솔(F12)에서 오류 확인');
     }
   };
 
