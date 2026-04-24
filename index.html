@@ -631,18 +631,14 @@ function updChip(){
 }
 
 // ── TABS ──
-const TAB_NAMES={'sch':'스케줄','mem':'회원관리','sal':'매출','not':'공지','adm':'관리'};
 
 function switchTab(id){
   ['sch','mem','not','adm','sal'].forEach(x=>{
     document.getElementById('pg-'+x).classList.toggle('show',x===id);
-    const nb=document.getElementById('nb-'+x);
-    if(nb)nb.classList.toggle('active',x===id);
+    const tb=document.getElementById('tb-'+x);
+    if(tb)tb.classList.toggle('on',x===id);
   });
   document.getElementById('fab').style.display=id==='sch'?'flex':'none';
-  const badge=document.getElementById('cur-tab-name');
-  if(badge)badge.textContent=TAB_NAMES[id]||'';
-  closeNav();
   if(id==='not')renderNotice();
   if(id==='mem'){mvTr=null;renderMem();}
   if(id==='adm')renderAdm();
