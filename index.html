@@ -53,8 +53,8 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .chip.on{border-color:transparent;color:#000;}
 
 /* ── TABS ── */
-.tabs{flex-shrink:0;display:flex;gap:5px;padding:9px 10px;background:var(--bg0);border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none;}.tabs::-webkit-scrollbar{display:none;}
-.tab{flex-shrink:0;padding:9px 12px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:var(--bg2);color:var(--t3);white-space:nowrap;}
+.tabs{flex-shrink:0;display:flex;gap:5px;padding:9px 10px;background:var(--bg0);border-bottom:1px solid var(--bd);}
+.tab{flex:1;padding:9px 2px;border-radius:10px;border:none;cursor:pointer;font-size:11px;font-weight:600;background:var(--bg2);color:var(--t3);white-space:nowrap;}
 .tab.on{background:#fff;color:#000;}
 
 /* ── PAGES + ANIMATION ── */
@@ -383,12 +383,12 @@ function initFB(){
     <div class="chip" id="chip" onclick="openLogin()">로그인</div>
   </div>
   <div class="tabs">
-    <button class="tab on" id="tb-sch" onclick="switchTab('sch')">스케줄</button>
-    <button class="tab" id="tb-mem" onclick="switchTab('mem')">회원관리</button>
-    <button class="tab" id="tb-not" onclick="switchTab('not')">공지</button>
-    <button class="tab" id="tb-adm" onclick="switchTab('adm')">관리</button>
+  <button class="tab on" id="tb-sch" onclick="switchTab('sch')">스케줄</button>
+  <button class="tab" id="tb-mem" onclick="switchTab('mem')">회원관리</button>
   <button class="tab" id="tb-sal" onclick="switchTab('sal')">매출</button>
-  </div>
+  <button class="tab" id="tb-not" onclick="switchTab('not')">공지</button>
+  <button class="tab" id="tb-adm" onclick="switchTab('adm')">관리</button>
+</div>
   <div class="pg show" id="pg-sch">
     <div class="day-wrap">
       <div class="wnav">
@@ -794,7 +794,7 @@ function renderMem(){
   if(mvTr){if(!canAccessTrainer(mvTr)){mvTr=null;renderMem();return;}renderMemView(ct);return;}
   ct.appendChild(mk('div','sec-header','담당자 선택'));
   const grid=ct.appendChild(el('div','trgrid'));
-  trainers.forEach(tr=>{
+  trainers.filter(tr=>tr.showInMem!==false).forEach(tr=>{
     const col=getTrainerColor(tr);
     const canAccess=canAccessTrainer(tr.id);
     const isAd=tr.role==='관리자';
@@ -1293,7 +1293,10 @@ function renderAdmStaff(ct){
     const col=getTrainerColor(tr);
     const card=ct.appendChild(el('div','stcard'));
     const av=card.appendChild(el('div','stav'));av.style.cssText='background:'+col.bg+';color:'+col.text+';';av.textContent=initials(tr.name);
-    const info=card.appendChild(el('div','stinfo'));info.appendChild(mk('div','stnm',tr.name));
+    const info=card.appendChild(el('div','stinfo'));
+    const stnmRow=info.appendChild(el('div'));stnmRow.style.cssText='display:flex;align-items:center;gap:6px;';
+    stnmRow.appendChild(mk('div','stnm',tr.name));
+    if(tr.showInMem===false){const hb=stnmRow.appendChild(mk('span','','회원관리 숨김'));hb.style.cssText='font-size:10px;color:#666;border:1px solid #333;border-radius:4px;padding:1px 5px;';}
     info.appendChild(mk('div','strl',tr.role+(tr.phone?' · '+tr.phone:'')+(tr.saban?' · 사번: '+tr.saban:'')));
     const sbtns=card.appendChild(el('div','stbtns'));
     sbtns.appendChild(mk('button','steditbtn','수정')).onclick=()=>openEditStaff(tr.id);
@@ -1314,6 +1317,18 @@ function openEditStaff(trId){
     sheet.appendChild(mk('label','','사번'));const si=sheet.appendChild(el('input'));si.type='text';si.value=tr.saban||'';
     sheet.appendChild(mk('label','','색상'));
     const ci=sheet.appendChild(el('select'));COLORS.forEach((_,i)=>{const o=ci.appendChild(document.createElement('option'));o.value=i;o.textContent=CNAMES[i];if(i===tr.color)o.selected=true;});
+
+    // 회원관리 탭 표시 여부
+    const showRow=sheet.appendChild(el('div'));showRow.style.cssText='display:flex;align-items:center;gap:10px;padding:12px 0 0;';
+    const showChk=showRow.appendChild(el('input'));showChk.type='checkbox';showChk.id='st-show';
+    showChk.style.cssText='width:20px;height:20px;accent-color:#ab47bc;cursor:pointer;';
+    showChk.checked=tr.showInMem!==false;
+    const showLbl=showRow.appendChild(el('label'));showLbl.htmlFor='st-show';
+    showLbl.style.cssText='font-size:14px;color:var(--t2);cursor:pointer;';
+    showLbl.textContent='회원관리 탭에 표시';
+    const showHint=sheet.appendChild(mk('div','','체크 해제 시 회원관리 탭에서 숨김 (수업 안하는 관리자 등)'));
+    showHint.style.cssText='font-size:11px;color:var(--t4);padding:3px 0 8px;';
+
     const btns=sheet.appendChild(el('div','shbtns'));
     btns.appendChild(mk('button','shno','취소')).onclick=close;
     btns.appendChild(mk('button','shok','저장')).onclick=()=>{
@@ -1322,8 +1337,8 @@ function openEditStaff(trId){
       if(!saban){alert('사번을 입력해주세요.');return;}
       if(trainers.some(t=>t.id!==trId&&t.saban===saban)){alert('이미 사용 중인 사번입니다.');return;}
       tr.name=name;tr.role=ri.value;tr.phone=pi.value.trim();tr.saban=saban;tr.color=parseInt(ci.value);
+      tr.showInMem=showChk.checked;
       sv('og10_tr',trainers);
-      // curUser가 이 직원이면 chip 업데이트
       if(curUser===trId)updChip();
       close();renderAdm();
     };
