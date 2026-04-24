@@ -313,6 +313,24 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .calday.now{color:#fff;font-weight:700;}
 .calday.cw{background:var(--bg3);color:var(--t1);}
 .calclose{width:100%;margin-top:12px;padding:11px;border-radius:10px;background:var(--bg2);border:1px solid var(--bd2);color:var(--t2);font-size:14px;cursor:pointer;}
+
+/* ── 햄버거 & 드로어 ── */
+.hamburger{width:40px;height:40px;border-radius:10px;background:var(--bg2);border:1px solid var(--bd2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;flex-shrink:0;}
+.hamburger span{display:block;width:18px;height:2px;background:var(--t2);border-radius:2px;}
+.cur-tab-badge{font-size:12px;color:var(--t3);background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:4px 10px;font-weight:600;white-space:nowrap;}
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:150;opacity:0;pointer-events:none;transition:opacity .25s;}
+.drawer-overlay.show{opacity:1;pointer-events:all;}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:240px;background:var(--bg1);border-left:1px solid var(--bd2);z-index:151;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);}
+.drawer.show{transform:translateX(0);}
+.drawer-header{padding:20px 20px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;}
+.drawer-logo{font-size:14px;font-weight:700;color:var(--t1);}
+.drawer-close{width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--bd2);color:var(--t3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.drawer-item{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;border-bottom:1px solid var(--bd);transition:background .15s;}
+.drawer-item:active{background:var(--bg3);}
+.drawer-item.active{background:var(--bg2);border-left:3px solid #fff;padding-left:17px;}
+.drawer-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
+.drawer-label{font-size:15px;font-weight:600;color:var(--t1);}
+.drawer-spacer{flex:1;}
 </style>
 
 <!-- Firebase SDK -->
@@ -382,13 +400,7 @@ function initFB(){
     <span class="hdr-ttl">오렌지골프존아카데미</span>
     <div class="chip" id="chip" onclick="openLogin()">로그인</div>
   </div>
-  <div class="tabs">
-  <button class="tab on" id="tb-sch" onclick="switchTab('sch')">스케줄</button>
-  <button class="tab" id="tb-mem" onclick="switchTab('mem')">회원관리</button>
-  <button class="tab" id="tb-sal" onclick="switchTab('sal')">매출</button>
-  <button class="tab" id="tb-not" onclick="switchTab('not')">공지</button>
-  <button class="tab" id="tb-adm" onclick="switchTab('adm')">관리</button>
-</div>
+  
   <div class="pg show" id="pg-sch">
     <div class="day-wrap">
       <div class="wnav">
@@ -410,7 +422,33 @@ function initFB(){
   <div class="pg" id="pg-not"><div class="pad"></div></div>
   <div class="pg" id="pg-adm"><div class="pad"></div></div>
 <div class="pg" id="pg-sal"><div class="pad"></div></div>
-  <button class="fab" id="fab" onclick="reqLogin(()=>openAddSheet())">+</button>
+  
+<!-- 드로어 메뉴 -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <span class="drawer-logo">메뉴</span>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="drawer-item active" id="di-sch" onclick="switchTab('sch')">
+    <span class="drawer-icon">📅</span><span class="drawer-label">스케줄</span>
+  </div>
+  <div class="drawer-item" id="di-mem" onclick="switchTab('mem')">
+    <span class="drawer-icon">👥</span><span class="drawer-label">회원관리</span>
+  </div>
+  <div class="drawer-item" id="di-sal" onclick="switchTab('sal')">
+    <span class="drawer-icon">📊</span><span class="drawer-label">매출</span>
+  </div>
+  <div class="drawer-item" id="di-not" onclick="switchTab('not')">
+    <span class="drawer-icon">📢</span><span class="drawer-label">공지</span>
+  </div>
+  <div class="drawer-item" id="di-adm" onclick="switchTab('adm')">
+    <span class="drawer-icon">⚙️</span><span class="drawer-label">관리</span>
+  </div>
+  <div class="drawer-spacer"></div>
+</div>
+
+<button class="fab" id="fab" onclick="reqLogin(()=>openAddSheet())">+</button>
   <div id="cal-cont"></div>
   <div id="sr"></div>
 </div>
@@ -604,16 +642,30 @@ function updChip(){
 }
 
 // ── TABS ──
+const TAB_NAMES={'sch':'스케줄','mem':'회원관리','sal':'매출','not':'공지','adm':'관리'};
+const TAB_ICONS={'sch':'📅','mem':'👥','sal':'📊','not':'📢','adm':'⚙️'};
 function switchTab(id){
   ['sch','mem','not','adm','sal'].forEach(x=>{
     document.getElementById('pg-'+x).classList.toggle('show',x===id);
-    document.getElementById('tb-'+x).classList.toggle('on',x===id);
+    const di=document.getElementById('di-'+x);
+    if(di)di.classList.toggle('active',x===id);
   });
   document.getElementById('fab').style.display=id==='sch'?'flex':'none';
+  const badge=document.getElementById('cur-tab-name');
+  if(badge)badge.textContent=TAB_NAMES[id]||'';
+  closeDrawer();
   if(id==='not')renderNotice();
   if(id==='mem'){mvTr=null;renderMem();}
   if(id==='adm')renderAdm();
   if(id==='sal')renderSales();
+}
+function openDrawer(){
+  document.getElementById('drawer-overlay').classList.add('show');
+  document.getElementById('drawer').classList.add('show');
+}
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('show');
+  document.getElementById('drawer').classList.remove('show');
 }
 
 // ── WEEK NAV ──
