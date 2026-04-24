@@ -279,6 +279,31 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 .calday.cw{background:var(--bg3);color:var(--t1);}
 .calclose{width:100%;margin-top:12px;padding:11px;border-radius:10px;background:var(--bg2);border:1px solid var(--bd2);color:var(--t2);font-size:14px;cursor:pointer;}
 </style>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDfhwH78E308KWi_rt0Ecz411NF_IC1a8g",
+  authDomain: "orangegolfzone.firebaseapp.com",
+  projectId: "orangegolfzone",
+  storageBucket: "orangegolfzone.firebasestorage.app",
+  messagingSenderId: "433401923121",
+  appId: "1:433401923121:web:e0488281021380bd037710",
+  measurementId: "G-FWH9JR3JNK"
+};
+
+let db = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  console.log('Firebase 연결 성공');
+} catch(e) {
+  console.warn('Firebase 초기화 실패:', e);
+}
+</script>
 </head>
 <body>
 
@@ -370,7 +395,62 @@ function genTimes(){const t=[];for(let h=6;h<=23;h++){t.push(p2(h)+':00');if(h<2
 const TIMES=genTimes();
 
 function ld(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
-function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function sv(k,v){
+  try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}
+  // Firebase에도 동기화
+  if(db){
+    const docKey=k.replace(/[^a-zA-Z0-9_]/g,'_');
+    db.collection('og_data').doc(docKey).set({value:JSON.stringify(v),ts:Date.now()}).catch(()=>{});
+  }
+}
+
+// Firebase에서 전체 데이터 로드 (앱 시작 시 1회)
+async function loadFromFirebase(){
+  if(!db)return false;
+  try{
+    const keys=['og10_tr','og10_sl','og10_mb','og10_nt','og10_pkg','og10_cc','og11_cv'];
+    const snap=await db.collection('og_data').get();
+    let hasData=false;
+    snap.forEach(doc=>{
+      const k=doc.id.replace(/_/g,c=>c); // docKey back to localStorage key
+      const data=doc.data();
+      if(data&&data.value){
+        // doc id를 원래 key로 변환
+        const origKey=doc.id.replace('og10_tr','og10_tr').replace('og10_sl','og10_sl')
+          .replace('og10_mb','og10_mb').replace('og10_nt','og10_nt')
+          .replace('og10_pkg','og10_pkg').replace('og10_cc','og10_cc')
+          .replace('og11_cv','og11_cv');
+        try{
+          localStorage.setItem(origKey,data.value);
+          hasData=true;
+        }catch(e){}
+      }
+    });
+    return hasData;
+  }catch(e){return false;}
+}
+
+// 실시간 리스너 - 다른 기기 변경사항 자동 반영
+function startRealtimeSync(){
+  if(!db)return;
+  db.collection('og_data').onSnapshot(snap=>{
+    snap.docChanges().forEach(change=>{
+      if(change.type==='modified'||change.type==='added'){
+        const data=change.doc.data();
+        if(data&&data.value){
+          const id=change.doc.id;
+          try{localStorage.setItem(id,data.value);}catch(e){}
+          // 화면 자동 갱신
+          if(id==='og10_tr'){trainers=ld('og10_tr',[]);updChip();if(document.getElementById('pg-adm').classList.contains('show'))renderAdm();}
+          else if(id==='og10_sl'){slots=ld('og10_sl',[]);if(document.getElementById('pg-sch').classList.contains('show'))renderTimes();}
+          else if(id==='og10_mb'){members=ld('og10_mb',[]);if(document.getElementById('pg-mem').classList.contains('show'))renderMem();}
+          else if(id==='og10_nt'){notices=ld('og10_nt',[]);if(document.getElementById('pg-not').classList.contains('show'))renderNotice();}
+          else if(id==='og10_pkg'){packages=ld('og10_pkg',[]);} 
+        }
+      }
+    });
+  });
+}
 
 let trainers=ld('og10_tr',[]);
 let slots=ld('og10_sl',[]);
@@ -1168,7 +1248,43 @@ function showSheet(builder){
 }
 
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
-initGate();
+
+// Firebase 데이터 로드 후 앱 시작
+(async function(){
+  try{
+    // 로딩 표시
+    const gate=document.getElementById('gate');
+    const gateHint=gate?gate.querySelector('.gate-hint'):null;
+    if(gateHint)gateHint.textContent='데이터 불러오는 중...';
+    
+    const hasFirebaseData=await loadFromFirebase();
+    
+    // 로드된 데이터로 변수 재초기화
+    trainers=ld('og10_tr',[]);
+    slots=ld('og10_sl',[]);
+    members=ld('og10_mb',[]);
+    notices=ld('og10_nt',[]);
+    packages=ld('og10_pkg',[]);
+    centerCode=localStorage.getItem('og10_cc')||'0000';
+    codeVerified=localStorage.getItem('og11_cv')==='1';
+    curUser=ld('og10_cu',null);
+    
+    if(!trainers.length){
+      trainers=[{id:'t1',name:'관리자',role:'관리자',phone:'',saban:'0000',color:0}];
+      sv('og10_tr',trainers);
+    }
+    if(curUser&&!trainers.find(t=>t.id===curUser)){curUser=null;sv('og10_cu',null);}
+    
+    if(gateHint)gateHint.textContent='센터 코드 입력';
+    
+    // 실시간 동기화 시작
+    startRealtimeSync();
+    
+  }catch(e){
+    console.warn('Firebase 로드 실패, 로컬 데이터 사용');
+  }
+  initGate();
+})();
 </script>
 </body>
 </html>
