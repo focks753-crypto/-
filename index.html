@@ -410,6 +410,25 @@ function sv(k,v){
 }
 
 // Firebase에서 전체 데이터 로드 (앱 시작 시 1회)
+
+// 모든 로컬 데이터를 Firebase에 업로드
+async function pushAllToFirebase(){
+  if(!db)return;
+  const items=[
+    {k:'og10_tr',v:trainers},
+    {k:'og10_sl',v:slots},
+    {k:'og10_mb',v:members},
+    {k:'og10_nt',v:notices},
+    {k:'og10_pkg',v:packages},
+  ];
+  const batch=db.batch();
+  items.forEach(item=>{
+    const ref=db.collection('og_data').doc(item.k);
+    batch.set(ref,{value:JSON.stringify(item.v),ts:Date.now()});
+  });
+  await batch.commit();
+}
+
 async function loadFromFirebase(){
   if(!db)return false;
   try{
@@ -1013,6 +1032,23 @@ function renderAdmCode(ct){
   const rb=form.appendChild(mk('button','','접속 초기화 (모든 기기)'));rb.style.cssText='width:100%;padding:11px;border-radius:9px;border:1px solid var(--bd2);background:transparent;color:var(--t3);font-size:13px;cursor:pointer;';
   rb.onclick=()=>{if(confirm('모든 기기에서 센터 코드를 다시 입력하게 됩니다.')){localStorage.setItem('og11_cv','0');codeVerified=false;alert('완료.');} };
 
+  // Firebase 강제 동기화 버튼
+  ct.appendChild(mk('div','sec','🔄 Firebase 실시간 동기화'));
+  const fbBox=ct.appendChild(el('div','sform'));
+  fbBox.appendChild(mk('div','','데이터가 다른 기기에 보이지 않으면 아래 버튼을 눌러주세요.')).style.cssText='font-size:12px;color:#666;';
+  const syncNowBtn=fbBox.appendChild(mk('button','sbtn','📤 지금 바로 모든 기기에 동기화'));
+  syncNowBtn.onclick=async()=>{
+    syncNowBtn.textContent='업로드 중...';syncNowBtn.disabled=true;
+    try{
+      await pushAllToFirebase();
+      syncNowBtn.textContent='✅ 동기화 완료!';
+      setTimeout(()=>{syncNowBtn.textContent='📤 지금 바로 모든 기기에 동기화';syncNowBtn.disabled=false;},2000);
+    }catch(e){
+      syncNowBtn.textContent='❌ 실패 - 다시 시도';syncNowBtn.disabled=false;
+      alert('동기화 실패: '+e.message);
+    }
+  };
+
   // ─ 직원 데이터 동기화 ─
   ct.appendChild(mk('div','sec','📱 기기 간 직원 데이터 동기화'));
   const syncBox=ct.appendChild(el('div','sform'));
@@ -1280,6 +1316,13 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').cat
       sv('og10_tr',trainers);
     }
     if(curUser&&!trainers.find(t=>t.id===curUser)){curUser=null;sv('og10_cu',null);}
+    
+    // Firebase가 비어있고 로컬에 실제 데이터가 있으면 → Firebase에 자동 업로드
+    if(!hasFirebaseData && db && trainers.length > 0){
+      console.log('로컬 데이터를 Firebase에 업로드 중...');
+      await pushAllToFirebase();
+      console.log('Firebase 업로드 완료 ✅');
+    }
     
     if(gateHint)gateHint.textContent='센터 코드 입력';
     
