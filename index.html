@@ -5329,10 +5329,12 @@ function renderPcSessions(ct,acts){
   // ── 퀵 버튼 ──
   const qb=ct.appendChild(Object.assign(document.createElement('div'),{}));qb.style.cssText='display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;';
   function setQuick(s,e){pcSalStart=s;pcSalEnd=e;renderPcContent();}
-  [{l:'오늘',fn:()=>{const t=new Date();setQuick(fmtD(t),fmtD(t));}},
+  function shiftDay(n){const base=n<0?new Date(pcSalStart):new Date(pcSalEnd);base.setDate(base.getDate()+n);const ds=fmtD(base);setQuick(ds,ds);}
+  [{l:'◀',fn:()=>shiftDay(-1),title:'하루 이전'},{l:'▶',fn:()=>shiftDay(1),title:'하루 다음'},
+   {l:'오늘',fn:()=>{const t=new Date();setQuick(fmtD(t),fmtD(t));}},
    {l:'이번주',fn:()=>{const t=new Date();const dow=t.getDay()||7;const mon=new Date(t);mon.setDate(t.getDate()-dow+1);const sun=new Date(mon);sun.setDate(mon.getDate()+6);setQuick(fmtD(mon),fmtD(sun));}},
    {l:'이번달',fn:()=>{const t=new Date();setQuick(fmtD(new Date(t.getFullYear(),t.getMonth(),1)),fmtD(new Date(t.getFullYear(),t.getMonth()+1,0)));}}
-  ].forEach(({l,fn})=>{const btn=qb.appendChild(document.createElement('button'));btn.className='pc-tbtn';btn.textContent=l;btn.style.cssText='padding:8px 16px;font-size:13px;font-weight:600;border-color:#818cf8;color:#818cf8;';btn.onclick=fn;});
+  ].forEach(({l,fn,title},i)=>{const btn=qb.appendChild(document.createElement('button'));btn.className='pc-tbtn';btn.textContent=l;if(title)btn.title=title;btn.style.cssText='padding:8px '+(i<2?'12px':'16px')+';font-size:13px;font-weight:600;border-color:#818cf8;color:#818cf8;'+(i===1?'margin-right:8px;':'');btn.onclick=fn;});
 
   // ── 필터 바 ──
   const fb=ct.appendChild(Object.assign(document.createElement('div'),{className:'pc-fbar'}));
@@ -5515,13 +5517,15 @@ function renderPcSales(ct,acts){
   fb.appendChild(Object.assign(document.createElement('button'),{className:'pc-tbtn pri',textContent:'조회'})).onclick=()=>renderPcContent();
   fb.appendChild(Object.assign(document.createElement('button'),{className:'pc-tbtn',textContent:'엑셀 다운로드'})).onclick=()=>{salMode='sales';salStartDate=pcSalStart;salEndDate=pcSalEnd;salTrainer=pcSalTr;salSearch='';const r=computeSales();dlSalesCSV(r.rows,r.totalRevenue);};
   // 퀵버튼
-  const qb=ct.appendChild(Object.assign(document.createElement('div'),{}));qb.style.cssText='display:flex;gap:8px;margin-bottom:12px;';
+  const qb=ct.appendChild(Object.assign(document.createElement('div'),{}));qb.style.cssText='display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;';
   function setQuick(s,e){pcSalStart=s;pcSalEnd=e;renderPcContent();}
   function fmtD(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-  [{l:'오늘',fn:()=>{const t=new Date();setQuick(fmtD(t),fmtD(t));}},
+  function shiftDay(n){const base=n<0?new Date(pcSalStart):new Date(pcSalEnd);base.setDate(base.getDate()+n);const ds=fmtD(base);setQuick(ds,ds);}
+  [{l:'◀',fn:()=>shiftDay(-1),title:'하루 이전'},{l:'▶',fn:()=>shiftDay(1),title:'하루 다음'},
+   {l:'오늘',fn:()=>{const t=new Date();setQuick(fmtD(t),fmtD(t));}},
    {l:'이번주',fn:()=>{const t=new Date();const dow=t.getDay()||7;const mon=new Date(t);mon.setDate(t.getDate()-dow+1);const sun=new Date(mon);sun.setDate(mon.getDate()+6);setQuick(fmtD(mon),fmtD(sun));}},
    {l:'이번달',fn:()=>{const t=new Date();const s=new Date(t.getFullYear(),t.getMonth(),1);const e=new Date(t.getFullYear(),t.getMonth()+1,0);setQuick(fmtD(s),fmtD(e));}},
-  ].forEach(({l,fn})=>{const btn=qb.appendChild(document.createElement('button'));btn.className='pc-tbtn';btn.textContent=l;btn.style.cssText='padding:8px 16px;font-size:13px;font-weight:600;border-color:#818cf8;color:#818cf8;';btn.onclick=fn;});
+  ].forEach(({l,fn,title},i)=>{const btn=qb.appendChild(document.createElement('button'));btn.className='pc-tbtn';btn.textContent=l;if(title)btn.title=title;btn.style.cssText='padding:8px '+(i<2?'12px':'16px')+';font-size:13px;font-weight:600;border-color:#818cf8;color:#818cf8;'+(i===1?'margin-right:8px;':'');btn.onclick=fn;});
   const sd=new Date(pcSalStart),ed=new Date(pcSalEnd);ed.setHours(23,59,59);const rows=[];let total=0;
   members.forEach(mb=>{if(pcSalTr&&mb.trainerId!==pcSalTr)return;const tr2=trainers.find(t=>t.id===mb.trainerId);(mb.plans||[]).forEach(p=>{const pd=new Date(p.addedAt||0);if(pd<sd||pd>ed)return;rows.push({mb,p,tr2,ds:pd.toLocaleDateString('ko-KR',{year:'2-digit',month:'2-digit',day:'2-digit'}),tm:String(pd.getHours()).padStart(2,'0')+':'+String(pd.getMinutes()).padStart(2,'0')});total+=p.totalPrice||0;});});
   const sd2=new Date(pcSalStart),ed2=new Date(pcSalEnd);ed2.setHours(23,59,59);
