@@ -4568,11 +4568,20 @@ function renderPcHome(ct,acts){
     trc.innerHTML=trRevHtml+'</div>';
 
     const sc=g3.appendChild(_mk('div','pc-card pc-card-anim'));
+    const _mgoal=ld('og10_mgoal',2000000);
+    const _pct=Math.min(mRev/_mgoal*100,100).toFixed(1);
     sc.innerHTML='<div class="pc-card-ttl">이번달 수업권 매출</div>'
       +'<div style="font-size:28px;font-weight:800;color:#e2e8f0;margin:8px 0 4px;">'+mRev.toLocaleString()+'원</div>'
       +'<div style="font-size:12px;color:#4a5068;margin-bottom:16px;">수업권 '+mCnt+'건</div>'
-      +'<div class="pc-bar" style="height:8px;"><div class="pc-bar-fill" style="width:'+Math.min(mRev/2000000*100,100).toFixed(1)+'%;background:#818cf8;"></div></div>'
-      +'<div style="display:flex;justify-content:space-between;font-size:11px;color:#252830;margin-top:5px;"><span>'+(m2+1)+'월</span><span>목표 200만원</span></div>';
+      +'<div class="pc-bar" style="height:8px;"><div class="pc-bar-fill" style="width:'+_pct+'%;background:#818cf8;"></div></div>'
+      +'<div style="display:flex;justify-content:space-between;font-size:11px;color:#6b7494;margin-top:5px;"><span>'+(m2+1)+'월 '+_pct+'%</span><span id="pc-mgoal-lbl" style="cursor:pointer;text-decoration:underline dotted;color:#818cf8;" title="클릭하여 목표 수정">목표 '+(_mgoal/10000).toFixed(0)+'만원</span></div>';
+    document.getElementById('pc-mgoal-lbl').onclick=()=>{
+      const v=prompt('월 목표 매출을 입력하세요 (단위: 원)',_mgoal);
+      if(v===null)return;
+      const n=parseInt(v.replace(/,/g,''));
+      if(isNaN(n)||n<=0){alert('올바른 금액을 입력해주세요.');return;}
+      sv('og10_mgoal',n);renderPcContent();
+    };
   }
 }
 // ═══ 고객관리 전체 시스템 ═══
