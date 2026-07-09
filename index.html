@@ -1104,6 +1104,23 @@ function normSlots(raw){
   });
 }
 let slots=normSlots(ld('og10_sl',[]));
+// 유실된 트레이너 자동 보정: 현재 트레이너 목록에 없는(끊긴) 수업을 그 수업 회원의 담당자로 배정
+function autoAssignOrphanTrainers(){
+  try{
+    if(!Array.isArray(slots)||!Array.isArray(members)||!Array.isArray(trainers))return 0;
+    const mById={}; members.forEach(m=>{if(m&&m.id)mById[m.id]=m;});
+    const tIds=new Set(trainers.map(t=>t&&t.id).filter(Boolean));
+    let changed=0;
+    slots.forEach(s=>{
+      if(!s)return;
+      if(s.trainerId && tIds.has(s.trainerId)) return; // 이미 유효한 트레이너면 그대로 둠(대타 배정 보존)
+      const m = s.memberId ? mById[s.memberId] : null;  // 회원 없는 OT/차단은 건너뜀
+      if(m && m.trainerId && tIds.has(m.trainerId)){ s.trainerId=m.trainerId; changed++; }
+    });
+    if(changed>0){ try{sv('og10_sl',slots);}catch(e){localStorage.setItem('og10_sl',JSON.stringify(slots));} console.log('자동 트레이너 배정:',changed,'건'); }
+    return changed;
+  }catch(e){ console.warn('autoAssignOrphanTrainers',e); return 0; }
+}
 let members=ld('og10_mb',[]);
 let notices=ld('og10_nt',[]);
 let packages=ld('og10_pkg',[]);
@@ -3874,9 +3891,11 @@ function dlSalesCSV(rows,total){
     let centerCode=localStorage.getItem('og10_cc')||'0000';
     let codeVerified=false;
     curUser=ld('og10_cu',null);
-    if(!trainers.length){trainers=[{id:'t1',name:'관리자',role:'관리자',phone:'',saban:'0000',color:0}];sv('og10_tr',trainers);}
+    if(!trainers.length){trainers=[{id:'t1',name:'관리자',role:'관리자',phone:'',saban:'0000',color:0}];try{localStorage.setItem('og10_tr',JSON.stringify(trainers));}catch(e){}}/* 보호: 기본 관리자는 로컬에만, 파이어베이스에 덮어쓰지 않음 */
     if(curUser&&!trainers.find(t=>t.id===curUser)){curUser=null;sv('og10_cu',null);}
-    if(!hasFirebaseData&&db&&trainers.length>0){await pushAllToFirebase();}
+    autoAssignOrphanTrainers(); // 유실 트레이너 자동 복원(회원 담당자 기준)
+    /* 보호: 파이어베이스가 비어 보여도 로컬 기본값을 통째로 밀어넣지 않음(데이터 덮어쓰기 방지). 필요 시 설정에서 수동 동기화 사용 */
+    // if(!hasFirebaseData&&db&&trainers.length>0){await pushAllToFirebase();}
     if(gateHint)gateHint.textContent='센터 코드 입력';
     startRealtimeSync();
   }catch(e){console.warn('Firebase 로드 실패, 로컬 데이터 사용');}
