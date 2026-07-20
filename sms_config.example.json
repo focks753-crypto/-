@@ -1,0 +1,7 @@
+{
+  "provider": "aligo",
+  "apikey": "알리고에서 발급받은 API 키",
+  "userid": "알리고 로그인 아이디",
+  "sender": "사전등록한 발신번호 (예: 0212345678, 하이픈 없이)",
+  "testMode": true
+}
