@@ -566,8 +566,8 @@ body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-se
 }
 #pc-layout{display:none;width:100vw;height:100vh;background:#0a0c10;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;}
 .pc-side{width:220px;flex-shrink:0;background:#0f1117;border-right:1px solid #1e2026;display:flex;flex-direction:column;height:100vh;overflow-y:hidden;}
-.pc-logo{padding:20px 18px;font-size:17px;font-weight:800;letter-spacing:-.5px;color:#fff;border-bottom:1px solid #1e2026;user-select:none;}
-.pc-logo em{color:#818cf8;font-style:normal;}
+.pc-logo{padding:18px;border-bottom:1px solid #1e2026;user-select:none;display:flex;align-items:center;}
+.pc-logo img{width:100%;height:auto;max-height:36px;object-fit:contain;display:block;}
 .pc-nav{padding:10px 8px;flex:1;}
 .pc-nav-item{display:flex;align-items:center;gap:9px;padding:10px 14px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;color:#6b7494;transition:all .15s;margin-bottom:2px;white-space:nowrap;}
 .pc-nav-item:hover{background:#16181f;color:#c4cde8;}
@@ -892,7 +892,7 @@ function initFB(){
 <div id="mob-overlay" onclick="closeMobSidebar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;"></div>
 <div id="mob-sidebar" style="display:none;position:fixed;top:0;left:0;width:72%;max-width:280px;height:100%;background:#0f1117;z-index:1001;flex-direction:column;overflow-y:auto;transform:translateX(-100%);transition:transform .3s;box-shadow:4px 0 24px rgba(0,0,0,.5);">
   <div style="padding:calc(20px + env(safe-area-inset-top,0px)) 20px 16px;border-bottom:1px solid #1e2026;display:flex;align-items:center;gap:12px;">
-    <div style="font-size:16px;font-weight:800;color:#e2e8f0;">The<em style="color:#818cf8;font-style:normal;">Line</em> CRM</div>
+    <img src="logo-white.png" alt="TheLine CRM" style="width:200px;max-width:100%;height:auto;object-fit:contain;display:block;">
   </div>
   <nav id="mob-nav" style="padding:12px 0;"></nav>
   <div style="margin-top:auto;padding:16px;border-top:1px solid #1e2026;">
@@ -902,7 +902,7 @@ function initFB(){
 
 <div id="app-wrap">
   <div class="hdr" style="justify-content:space-between;">
-    <img class="hdr-logo" src="logo.png" alt="TheLine">
+    <img class="hdr-logo" src="icon-white.png" alt="TheLine">
     <span class="hdr-ttl">TheLine CRM</span>
     <div style="display:flex;align-items:center;gap:10px;">
       <div class="chip" id="chip" onclick="openLogin()">로그인</div>
@@ -2297,6 +2297,17 @@ function renderMem(){
     btn.onclick=()=>{window._mobMemFilter=k;renderMem();};
   });
 
+  // 회원 유형 필터 (PT회원 / 헬스회원권)
+  const mobMemType=window._mobMemType||'all';
+  const typeBar=toolbar.appendChild(document.createElement('div'));
+  typeBar.style.cssText='display:flex;gap:6px;flex-basis:100%;order:9;overflow-x:auto;';
+  [{k:'all',l:'전체'},{k:'pt',l:'PT회원'},{k:'membership',l:'헬스회원권'}].forEach(({k,l})=>{
+    const btn=typeBar.appendChild(document.createElement('button'));
+    btn.style.cssText='padding:6px 12px;border-radius:8px;border:1px solid '+(mobMemType===k?'#34d399':'#1e2026')+';background:'+(mobMemType===k?'rgba(52,211,153,.1)':'transparent')+';color:'+(mobMemType===k?'#34d399':'#6b7494')+';font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;';
+    btn.textContent=l;
+    btn.onclick=()=>{window._mobMemType=k;renderMem();};
+  });
+
   // 등록 버튼
   const regBtn=toolbar.appendChild(document.createElement('button'));
   regBtn.style.cssText='padding:8px 14px;border-radius:8px;border:none;background:#818cf8;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;';
@@ -2328,6 +2339,8 @@ function renderMem(){
   else if(flt==='expiring')list=list.filter(m=>{if(pcMbStatus(m)==='expiring')return true;let t=0;(m.plans||[]).forEach(p=>{t+=getPlanRemain(p);});return t>0&&t<=2;});
   else if(flt==='active')list=list.filter(m=>{const st=pcMbStatus?pcMbStatus(m):'none';return st==='active'||st==='expiring';});
   else if(flt!=='all')list=list.filter(m=>pcMbStatus&&pcMbStatus(m)===flt);
+  const mtype=window._mobMemType||'all';
+  if(mtype!=='all')list=list.filter(m=>pcMbMatchType(m,mtype));
 
   memContent.appendChild(Object.assign(document.createElement('div'),{textContent:'총 '+list.length+'명'})).style.cssText='font-size:12px;color:#4a5068;margin-bottom:8px;';
 
@@ -3692,6 +3705,7 @@ function getCurrentCustList(){
   else if(custSV==='expiring')list=list.filter(m=>{if(pcMbStatus(m)==='expiring')return true;let t=0;(m.plans||[]).forEach(p=>{t+=getPlanRemain(p);});return t>0&&t<=2;});
   else if(custSV==='active')list=list.filter(m=>{const st=pcMbStatus(m);return st==='active'||st==='expiring';});
   else if(custSV&&custSV!=='all')list=list.filter(m=>pcMbStatus(m)===custSV);
+  if(custType&&custType!=='all')list=list.filter(m=>pcMbMatchType(m,custType));
   if(pcCustKw)list=list.filter(m=>m.name.includes(pcCustKw)||(m.phone||'').includes(pcCustKw));
   return list;
 }
@@ -3706,6 +3720,8 @@ function getMobCustList(){
   else if(flt==='expiring')list=list.filter(m=>{if(pcMbStatus(m)==='expiring')return true;let t=0;(m.plans||[]).forEach(p=>{t+=getPlanRemain(p);});return t>0&&t<=2;});
   else if(flt==='active')list=list.filter(m=>{const st=pcMbStatus?pcMbStatus(m):'none';return st==='active'||st==='expiring';});
   else if(flt!=='all')list=list.filter(m=>pcMbStatus&&pcMbStatus(m)===flt);
+  const mtype=window._mobMemType||'all';
+  if(mtype!=='all')list=list.filter(m=>pcMbMatchType(m,mtype));
   return list;
 }
 function dlCustXLSX(list){
@@ -4095,7 +4111,7 @@ function openAddSheet_mobile(dateStr){
 <!-- ═══ TheLine CRM — PC Layout ═══ -->
 <div id="pc-layout">
   <aside class="pc-side">
-    <div class="pc-logo">The<em>Line</em> CRM</div>
+    <div class="pc-logo"><img src="logo-white.png" alt="TheLine CRM"></div>
     <div class="pc-nav" id="pc-nav"></div>
     <div class="pc-side-foot">
       <div class="pc-user-btn" onclick="openPcLogin();" id="pc-ubtn">
@@ -4493,6 +4509,10 @@ function getWeekNoSesMembers(){
 }
 function pcSLbl(s){return{active:'활성',expiring:'만료임박',expired:'만료',none:'미등록'}[s]||'미등록';}
 function pcSCls(s){return{active:'pbs-on',expiring:'pbs-ex',expired:'pbs-off',none:'pbs-no'}[s]||'pbs-no';}
+// ── 회원 유형 분류: PT수업권 / 헬스회원권 (환불 제외, 그룹수업 제외) ──
+function pcMbHasPT(mb){return(mb.plans||[]).some(p=>p&&!p.refunded&&p.productType!=='membership'&&p.productType!=='group'&&p.productType!=='group_monthly'&&(p.sessions||0)>0);}
+function pcMbHasMembership(mb){return(mb.plans||[]).some(p=>p&&!p.refunded&&p.productType==='membership');}
+function pcMbMatchType(mb,type){if(!type||type==='all')return true;if(type==='pt')return pcMbHasPT(mb);if(type==='membership')return pcMbHasMembership(mb);return true;}
 function renderPcHome(ct,acts){
   const total=members.length;
   const active=members.filter(m=>{const st=pcMbStatus(m);return st==='active'||st==='expiring';}).length;
@@ -4686,7 +4706,7 @@ function _sel(options){
 }
 
 // ── 회원 등록 (2단계) ────────────────────────────────────────────────────
-let custSV='all';let custTr='';
+let custSV='all';let custTr='';let custType='all';
 let pcDetailMbId=null;
 let pcSalSortCol=null,pcSalSortDir=1;  // 매출 정렬
 let pcBypkgSortCol='tot',pcBypkgSortDir=-1; // 상품별 정렬
@@ -4835,6 +4855,24 @@ function renderPcCust(ct,acts){
     const tab=sb.appendChild(Object.assign(document.createElement('div'),{className:'pc-stab'+(custSV===s.id?' on':''),textContent:s.label+' '+cnt}));
     tab.onclick=()=>{custSV=s.id;pcDetailMbId=null;if(s.id!=='noweek'&&s.id!=='nextweek')pcSV='members';renderPcContent();};
   });
+  // ── 상태 필터 적용 (유형 칩 카운트 기준이 될 리스트) ──
+  let list=baseList.slice();
+  if(custSV==='noweek')list=noWeekList2.slice();
+  else if(custSV==='nextweek')list=nextWeekList3.slice();
+  else if(custSV==='expiring')list=list.filter(m=>{if(pcMbStatus(m)==='expiring')return true;let t=0;(m.plans||[]).forEach(p=>{t+=getPlanRemain(p);});return t>0&&t<=2;});
+  else if(custSV==='active')list=list.filter(m=>{const st=pcMbStatus(m);return st==='active'||st==='expiring';});
+  else if(custSV&&custSV!=='all')list=list.filter(m=>pcMbStatus(m)===custSV);
+
+  // ── 회원 유형 필터 (PT수업권 / 헬스회원권) ──
+  const typeRow=ct.appendChild(Object.assign(document.createElement('div'),{className:'pc-sub-tabs'}));
+  typeRow.style.cssText='margin-top:-2px;';
+  const _typeCnt=t=>list.filter(m=>pcMbMatchType(m,t)).length;
+  [{id:'all',l:'전체'},{id:'pt',l:'PT회원'},{id:'membership',l:'헬스회원권'}].forEach(t=>{
+    const tab=typeRow.appendChild(Object.assign(document.createElement('div'),{className:'pc-stab'+(custType===t.id?' on':''),textContent:t.l+' '+_typeCnt(t.id)}));
+    tab.onclick=()=>{custType=t.id;pcDetailMbId=null;renderPcContent();};
+  });
+  if(custType&&custType!=='all')list=list.filter(m=>pcMbMatchType(m,custType));
+
   const fb=ct.appendChild(Object.assign(document.createElement('div'),{className:'pc-fbar'}));
   const trSel=fb.appendChild(document.createElement('select'));trSel.className='pcm-select';trSel.style.cssText='width:130px;padding:9px 12px;';
   [{id:'',name:'전체 트레이너'},...trainers].forEach(tr=>{const o=trSel.appendChild(document.createElement('option'));o.value=tr.id||'';o.textContent=tr.name;if((tr.id||'')===custTr)o.selected=true;});
@@ -4845,12 +4883,6 @@ function renderPcCust(ct,acts){
   fb.appendChild(Object.assign(document.createElement('button'),{className:'pc-tbtn pri',textContent:'조회'})).onclick=()=>renderPcContent();
   fb.appendChild(Object.assign(document.createElement('button'),{className:'pc-tbtn xl-btn',textContent:'⬇ 엑셀'})).onclick=()=>dlCustXLSX(getCurrentCustList());
 
-  let list=baseList.slice();
-  if(custSV==='noweek')list=noWeekList2.slice();
-  else if(custSV==='nextweek')list=nextWeekList3.slice();
-  else if(custSV==='expiring')list=list.filter(m=>{if(pcMbStatus(m)==='expiring')return true;let t=0;(m.plans||[]).forEach(p=>{t+=getPlanRemain(p);});return t>0&&t<=2;});
-  else if(custSV==='active')list=list.filter(m=>{const st=pcMbStatus(m);return st==='active'||st==='expiring';});
-  else if(custSV&&custSV!=='all')list=list.filter(m=>pcMbStatus(m)===custSV);
   if(pcCustKw)list=list.filter(m=>m.name.includes(pcCustKw)||(m.phone||'').includes(pcCustKw));
 
   const tw=ct.appendChild(Object.assign(document.createElement('div'),{className:'pc-tw'}));
