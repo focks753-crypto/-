@@ -7295,6 +7295,7 @@ function renderMobGroupClass(ct){
 }
 
 // ── 분석 ─────────────────────────────────────────────────────────────────
+let anaNoregTr='';let anaNoregFl='all';let anaNoregKw='';
 function _anaCalc(){
   // PT 수업권(membership 제외, sessions>0, 환불 제외)만 집계
   const ptPlans=m=>(m.plans||[]).filter(p=>p.productType!=='membership'&&(p.sessions||0)>0&&!p.refunded);
@@ -7367,42 +7368,79 @@ function renderPcAnalytics(ct){
     const chev=document.getElementById('ana-chev');if(chev)chev.textContent=open?'▾':'▴';
     if(!open&&!dbody._built){
       dbody._built=true;
-      const noregNotes=ld('og10_noreg_notes',{});
+      // ── 필터바 ──
+      const fbar=dbody.appendChild(document.createElement('div'));
+      fbar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;';
+      const trSel=fbar.appendChild(document.createElement('select'));trSel.className='pcm-select';trSel.style.cssText='width:130px;padding:9px 12px;';
+      [{id:'',name:'전체 트레이너'},...trainers].forEach(tr=>{const o=trSel.appendChild(document.createElement('option'));o.value=tr.id||'';o.textContent=tr.name;if((tr.id||'')===anaNoregTr)o.selected=true;});
+      trSel.onchange=e=>{anaNoregTr=e.target.value;renderRows();};
+      const flWrap=fbar.appendChild(document.createElement('div'));flWrap.style.cssText='display:flex;gap:6px;';
+      [{id:'all',l:'전체'},{id:'no',l:'미실시'},{id:'yes',l:'완료'}].forEach(f=>{
+        const btn=flWrap.appendChild(document.createElement('button'));
+        btn.dataset.fl=f.id;
+        btn.style.cssText='padding:8px 14px;border-radius:8px;border:1px solid '+(anaNoregFl===f.id?'#818cf8':'#1e2026')+';background:'+(anaNoregFl===f.id?'rgba(129,140,248,.1)':'transparent')+';color:'+(anaNoregFl===f.id?'#818cf8':'#6b7494')+';font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;';
+        btn.textContent=f.l;
+        btn.onclick=()=>{anaNoregFl=f.id;renderRows();[...flWrap.children].forEach(b=>{const on=b.dataset.fl===anaNoregFl;b.style.borderColor=on?'#818cf8':'#1e2026';b.style.background=on?'rgba(129,140,248,.1)':'transparent';b.style.color=on?'#818cf8':'#6b7494';});};
+      });
+      const si=fbar.appendChild(document.createElement('input'));si.className='pcm-input';si.style.cssText='width:180px;padding:9px 12px;font-size:13px;';
+      si.placeholder='이름 또는 연락처...';si.value=anaNoregKw;
+      si.oninput=e=>{anaNoregKw=e.target.value;renderRows();};
       const dtbl=dbody.appendChild(Object.assign(document.createElement('table'),{className:'pc-tbl'}));
       dtbl.style.marginTop='12px';
       const dth=dtbl.appendChild(document.createElement('thead')).appendChild(document.createElement('tr'));
-      [{l:'트레이너',w:'90px'},{l:'회원명',w:'80px'},{l:'연락처',w:'110px'},{l:'마지막 수업일',w:'100px'},{l:'재플러팅',w:'120px'},{l:'메모',w:''},{l:'액션',w:'60px'}].forEach(({l,w})=>{
+      [{l:'트레이너',w:'90px'},{l:'회원명',w:'80px'},{l:'연락처',w:'120px'},{l:'마지막 수업일',w:'100px'},{l:'재플러팅',w:'120px'},{l:'메모',w:''},{l:'액션',w:'60px'}].forEach(({l,w})=>{
         const th=dth.appendChild(document.createElement('th'));th.textContent=l;if(w)th.style.width=w;
       });
       const dtb=dtbl.appendChild(document.createElement('tbody'));
-      d.noregList.forEach(({m,lastDate})=>{
-        const tr2=trainers.find(t=>t.id===m.trainerId);
-        const note=noregNotes[m.id]||{flirted:false,flirtedDate:'',memo:''};
-        const drow=dtb.appendChild(document.createElement('tr'));
-        if(note.flirted)drow.style.opacity='0.55';
-        [tr2?tr2.name:'-',m.name,m.phone||'-',lastDate?lastDate.slice(0,10):'-'].forEach(v=>{drow.appendChild(document.createElement('td')).textContent=v;});
-        // 재플러팅
-        const flTd=drow.appendChild(document.createElement('td'));
-        const flLbl=flTd.appendChild(document.createElement('span'));
-        flLbl.textContent=note.flirted?(note.flirtedDate?'✓ '+note.flirtedDate:'✓'):'미실시';
-        flLbl.style.cssText='font-size:12px;color:'+(note.flirted?'#818cf8':'#3a3f58')+';';
-        // 메모
-        const memoTd=drow.appendChild(document.createElement('td'));
-        const memoLbl=memoTd.appendChild(document.createElement('span'));
-        memoLbl.textContent=(note.memo||'').slice(0,30)+((note.memo||'').length>30?'...':'');
-        memoLbl.style.cssText='font-size:12px;color:#6b7494;';
-        // 액션
-        const actTd=drow.appendChild(document.createElement('td'));
-        const editBtn=actTd.appendChild(document.createElement('button'));
-        editBtn.className='pc-tbtn';editBtn.style.cssText='padding:5px 10px;font-size:11px;';editBtn.textContent='수정';
-        editBtn.onclick=()=>openNoregEditModal(m.id,m.name,(saved)=>{
-          flLbl.textContent=saved.flirted?(saved.flirtedDate?'✓ '+saved.flirtedDate:'✓'):'미실시';
-          flLbl.style.color=saved.flirted?'#818cf8':'#3a3f58';
-          memoLbl.textContent=(saved.memo||'').slice(0,30)+((saved.memo||'').length>30?'...':'');
-          drow.style.opacity=saved.flirted?'0.55':'1';
+      function renderRows(){
+        dtb.innerHTML='';
+        const noregNotes=ld('og10_noreg_notes',{});
+        const kw=anaNoregKw.trim();
+        const rows=d.noregList.filter(({m})=>{
+          if(anaNoregTr&&m.trainerId!==anaNoregTr)return false;
+          const note=noregNotes[m.id]||{flirted:false};
+          if(anaNoregFl==='yes'&&!note.flirted)return false;
+          if(anaNoregFl==='no'&&note.flirted)return false;
+          if(kw&&!(m.name.includes(kw)||(m.phone||'').includes(kw)))return false;
+          return true;
         });
-      });
-      if(!d.noregList.length){const r=dtb.appendChild(document.createElement('tr'));const td=r.appendChild(document.createElement('td'));td.colSpan=6;td.textContent='해당 회원이 없습니다.';td.style.cssText='text-align:center;color:#6b7494;padding:24px;';}
+        rows.forEach(({m,lastDate})=>{
+          const tr2=trainers.find(t=>t.id===m.trainerId);
+          const note=noregNotes[m.id]||{flirted:false,flirtedDate:'',memo:''};
+          const drow=dtb.appendChild(document.createElement('tr'));
+          drow.style.cursor='pointer';
+          if(note.flirted)drow.style.opacity='0.55';
+          drow.onclick=()=>openPcMemberDetail(m.id);
+          [tr2?tr2.name:'-',m.name].forEach(v=>{drow.appendChild(document.createElement('td')).textContent=v;});
+          const phTd=drow.appendChild(document.createElement('td'));phTd.textContent=m.phone||'-';phTd.style.whiteSpace='nowrap';
+          drow.appendChild(document.createElement('td')).textContent=lastDate?lastDate.slice(0,10):'-';
+          // 재플러팅
+          const flTd=drow.appendChild(document.createElement('td'));
+          const flLbl=flTd.appendChild(document.createElement('span'));
+          flLbl.textContent=note.flirted?(note.flirtedDate?'✓ '+note.flirtedDate:'✓'):'미실시';
+          flLbl.style.cssText='font-size:12px;color:'+(note.flirted?'#818cf8':'#3a3f58')+';';
+          // 메모
+          const memoTd=drow.appendChild(document.createElement('td'));
+          const memoLbl=memoTd.appendChild(document.createElement('span'));
+          memoLbl.textContent=(note.memo||'').slice(0,30)+((note.memo||'').length>30?'...':'');
+          memoLbl.style.cssText='font-size:12px;color:#6b7494;';
+          // 액션
+          const actTd=drow.appendChild(document.createElement('td'));
+          const editBtn=actTd.appendChild(document.createElement('button'));
+          editBtn.className='pc-tbtn';editBtn.style.cssText='padding:5px 10px;font-size:11px;';editBtn.textContent='수정';
+          editBtn.onclick=e2=>{
+            e2.stopPropagation();
+            openNoregEditModal(m.id,m.name,(saved)=>{
+              flLbl.textContent=saved.flirted?(saved.flirtedDate?'✓ '+saved.flirtedDate:'✓'):'미실시';
+              flLbl.style.color=saved.flirted?'#818cf8':'#3a3f58';
+              memoLbl.textContent=(saved.memo||'').slice(0,30)+((saved.memo||'').length>30?'...':'');
+              drow.style.opacity=saved.flirted?'0.55':'1';
+            });
+          };
+        });
+        if(!rows.length){const r=dtb.appendChild(document.createElement('tr'));const td=r.appendChild(document.createElement('td'));td.colSpan=7;td.textContent='해당 회원이 없습니다.';td.style.cssText='text-align:center;color:#6b7494;padding:24px;';}
+      }
+      renderRows();
     }
   };
 }
