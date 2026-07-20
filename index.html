@@ -4889,7 +4889,7 @@ function renderPcCust(ct,acts){
   const tbl=tw.appendChild(Object.assign(document.createElement('table'),{className:'pc-tbl'}));
   const thead=tbl.appendChild(document.createElement('thead'));const hr=thead.appendChild(document.createElement('tr'));
   const custHdrs=['No','상태','이름','연락처','성별','담당','유입','수업권','잔여','금액','매출일'];
-  const custSortKeys=[null,null,'name','phone','gender','trainer','inflow','plan','remain','totalPaid','regDate'];
+  const custSortKeys=[null,null,'name','phone','gender','trainer','inflow','plan','remain','totalPaid','payDate'];
   custHdrs.forEach((h,hi)=>{
     const th=hr.appendChild(document.createElement('th'));
     const sk=custSortKeys[hi];
@@ -4913,11 +4913,11 @@ function renderPcCust(ct,acts){
         const plans=mb.plans||[];const latest=plans[plans.length-1];
         const rem=plans.reduce((s,p)=>s+getPlanRemain(p),0);
         const totalPaid=plans.reduce((s,p)=>s+(p.totalPrice||0),0);
-        const regDate=mb.registeredAt||0;
+        const payDate=latest?(latest.addedAt||(latest.paymentDate?new Date(latest.paymentDate).getTime():0)):(mb.registeredAt||0);
         return{name:mb.name||'',phone:mb.phone||'',gender:mb.gender||'',
           trainer:tr2b?tr2b.name:'',inflow:mb.inflow||'',
           plan:latest?(latest.productName||latest.duration+'분 '+latest.sessions+'회권'):'',
-          remain:rem,totalPaid,regDate};
+          remain:rem,totalPaid,payDate};
       };
       const va=ga(a)[pcCustSortCol],vb=ga(b)[pcCustSortCol];
       if(typeof va==='number')return (va-vb)*pcCustSortDir;
