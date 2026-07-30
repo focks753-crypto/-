@@ -7814,6 +7814,72 @@ window.addEventListener('resize',()=>{
 
 // ── PC 캘린더 슬롯 상세/수정/삭제 ─────────────────────────────────────────
 // ── PC 당일 전체 일정 보기 ────────────────────────────────────────────────
+// PC 일정 추가 (레슨일정 캘린더) — 모바일 '스케줄 추가'(showSheet) 로직을 PC 모달로. 수업권(25/50분) 모델
+function openPcAddSchedule(dateStr){
+  const d=dateStr?new Date(dateStr+'T00:00:00'):new Date();
+  const selDate=dateStr||(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));
+  pcModal((box,close)=>{
+    box.appendChild(Object.assign(document.createElement('div'),{className:'pcm-ttl',textContent:'일정 추가'}));
+    box.appendChild(Object.assign(document.createElement('div'),{className:'pcm-sub',textContent:selDate}));
+    const r1=box.appendChild(document.createElement('div'));r1.className='pcm-row2';
+    const trF=r1.appendChild(_f('강사',true));
+    const trS=trF.appendChild(_sel(trainers.map(t=>({v:t.id,l:t.name}))));
+    if(curUser&&trainers.some(t=>t.id===curUser))trS.value=curUser;
+    if(!isAdminUser())trS.disabled=true; // 비관리자는 본인만
+    const dateF=r1.appendChild(_f('날짜',true));
+    const dateI=dateF.appendChild(_inp('','date'));dateI.value=selDate;
+    const r2=box.appendChild(document.createElement('div'));r2.className='pcm-row2';
+    const timeF=r2.appendChild(_f('시간',true));
+    const timeS=timeF.appendChild(_sel(TIMES.map(t=>({v:t,l:t}))));
+    const mbF=r2.appendChild(_f('회원'));
+    const mbS=mbF.appendChild(_sel([{v:'',l:'-- 회원 없음 --'}]));
+    const tyF=box.appendChild(_f('일정 유형',true));const tyWrap=tyF.appendChild(document.createElement('div'));
+    const planF=box.appendChild(_f('권종 선택'));const planWrap=planF.appendChild(document.createElement('div'));
+    const moF=box.appendChild(_f('메모 (선택)'));const moI=moF.appendChild(_inp('메모'));
+    let tySel=null,selectedPlanId=null;
+    function getTid(){return trS.value;}
+    function fillMbs(){const tid=getTid();mbS.innerHTML='';[{v:'',l:'-- 회원 없음 --'},...members.filter(m=>m.trainerId===tid).map(m=>({v:m.id,l:m.name}))].forEach(o=>{const op=document.createElement('option');op.value=o.v;op.textContent=o.l;mbS.appendChild(op);});}
+    function updateTypes(){
+      tyWrap.innerHTML='';
+      const mbId=mbS.value;const mb=mbId?members.find(m=>m.id===mbId):null;
+      let types=[];
+      if(mb){const durs=[...new Set((mb.plans||[]).map(p=>p.duration))];if(durs.includes(25))types.push('25분 수업');if(durs.includes(50))types.push('50분 수업');types.push('OT');}
+      else types=['OT','25분 수업','50분 수업','상담','차단'];
+      const tr2=trainers.find(t=>t.id===getTid());if(tr2&&tr2.role==='관리자'&&!types.includes('상담'))types.push('상담');
+      tySel=tyWrap.appendChild(_sel(types.map(t=>({v:t,l:t}))));
+      tySel.onchange=updatePlans;updatePlans();
+    }
+    function updatePlans(){
+      planWrap.innerHTML='';selectedPlanId=null;
+      const mbId=mbS.value;const mb=mbId?members.find(m=>m.id===mbId):null;
+      const ty=tySel?tySel.value:'';
+      if(!mb||!ty.includes('수업')){planF.style.display='none';return;}
+      const dur=ty.startsWith('25')?25:50;
+      const matchPlans=(mb.plans||[]).filter(p=>p.duration===dur);
+      if(!matchPlans.length){planF.style.display='none';return;}
+      planF.style.display='block';
+      const plS=planWrap.appendChild(_sel(matchPlans.map(p=>({v:p.id,l:(p.sessions||0)+'회권 · '+planRemLbl(p)}))));
+      selectedPlanId=matchPlans[0].id;plS.value=selectedPlanId;
+      plS.onchange=()=>{selectedPlanId=plS.value;};
+    }
+    trS.onchange=()=>{fillMbs();updateTypes();};
+    mbS.onchange=()=>updateTypes();
+    fillMbs();updateTypes();
+    const btns=box.appendChild(document.createElement('div'));btns.className='pcm-btns';btns.style.marginTop='20px';
+    btns.appendChild(Object.assign(document.createElement('button'),{className:'pcm-btn-sec',textContent:'취소'})).onclick=close;
+    btns.appendChild(Object.assign(document.createElement('button'),{className:'pcm-btn-pri',textContent:'추가'})).onclick=()=>{
+      const tid=trS.value;if(!tid){alert('강사를 선택해주세요.');return;}
+      const dt=dateI.value;if(!dt){alert('날짜를 선택해주세요.');return;}
+      const tm=timeS.value;const mbId=mbS.value||null;const ty=tySel?tySel.value:'OT';
+      const planId=(!mbId||!ty.includes('수업'))?null:selectedPlanId;
+      if(mbId&&ty.includes('수업')&&!planId){alert('권종을 선택해주세요.');return;}
+      const _newSlot={id:'s'+Date.now(),trainerId:tid,memberId:mbId,planId,date:dt,time:tm,type:ty,memo:moI.value.trim()};
+      slots.push(_newSlot);sv('og10_sl',slots);
+      if(mbId)writeCrmBk(_newSlot);
+      close();renderPcContent();
+    };
+  },{});
+}
 function openPcDayView(ds){
   const daySlots=slots.filter(s=>s.date===ds).sort((a,b)=>a.time.localeCompare(b.time));
   const dows=['일','월','화','수','목','금','토'];
