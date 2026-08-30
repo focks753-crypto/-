@@ -1166,7 +1166,9 @@ function getPlanRemain(plan){if(plan&&plan.productType==='membership')return 0;r
 function planDaysLeft(plan){if(!plan||!plan.endDate)return null;return Math.ceil((new Date(plan.endDate)-new Date())/(1000*60*60*24));}
 function planRemLbl(plan){if(plan&&plan.productType==='membership'){const dl=planDaysLeft(plan);return dl==null?'기간제':(dl>=0?('D-'+dl):'만료');}return '잔여 '+getPlanRemain(plan)+'회';}
 function planRemWarn(plan){if(plan&&plan.productType==='membership'){const dl=planDaysLeft(plan);return dl!=null&&dl>=0&&dl<=14;}const r=getPlanRemain(plan);return r>=0&&r<=2;}
-function memRemLbl(mb){const plans=(mb.plans||[]).filter(p=>!p.refunded);const tot=plans.reduce((a,p)=>a+Math.max(0,getPlanRemain(p)),0);if(tot>0)return '잔여 '+tot+'회';const mP=plans.find(p=>p.productType==='membership'&&p.endDate);if(mP){const dl=planDaysLeft(mP);return dl>=0?('D-'+dl):'만료';}return '잔여 0회';}
+// 멤버십(기간제 이용권) 중 만료일이 가장 늦은(=최신/유효) 플랜. 여러 번 재등록 시 옛 만료 플랜이 아니라 최신 것으로 상태 판정
+function latestMembershipPlan(plans){const ms=(plans||[]).filter(p=>p&&p.productType==='membership'&&p.endDate);if(!ms.length)return null;return ms.reduce((a,b)=>new Date(a.endDate)>=new Date(b.endDate)?a:b);}
+function memRemLbl(mb){const plans=(mb.plans||[]).filter(p=>!p.refunded);const tot=plans.reduce((a,p)=>a+Math.max(0,getPlanRemain(p)),0);if(tot>0)return '잔여 '+tot+'회';const mP=latestMembershipPlan(plans);if(mP){const dl=planDaysLeft(mP);return dl>=0?('D-'+dl):'만료';}return '잔여 0회';}
 function isPlanActive(p){if(p&&p.productType==='membership'){const dl=planDaysLeft(p);return dl!=null&&dl>=0;}return getPlanRemain(p)>0;}
 function getMemberWarn(mb){return(mb.plans||[]).some(p=>getPlanRemain(p)>0&&getPlanRemain(p)<=2);}
 
@@ -4466,7 +4468,7 @@ function renderPcContent(){
 function pcMbStatus(mb){
   const plans=(mb.plans||[]).filter(p=>!p.refunded);
   if(!plans.length)return'none';
-  const mPlan=plans.find(p=>p.productType==='membership'&&p.endDate);
+  const mPlan=latestMembershipPlan(plans);
   if(mPlan){const rem=Math.ceil((new Date(mPlan.endDate)-new Date())/(1000*60*60*24));if(rem<=0)return'expired';if(rem<=14)return'expiring';return'active';}
   let total=0;plans.forEach(p=>{if(p.productType!=='membership'){const r=getPlanRemain(p);if(r>0)total+=r;}});
   if(total>0&&total<=2)return'expiring';if(total>0)return'active';
@@ -5815,7 +5817,7 @@ function fillSmsTpl(tpl,m,daysLeft,endDate){
 function getSmsTargets(){
   return members.map(m=>{
     const plans=(m.plans||[]).filter(p=>p&&!p.refunded);
-    const mp=plans.find(p=>p.productType==='membership'&&p.endDate);
+    const mp=latestMembershipPlan(plans);
     if(!mp)return null;
     const dl=Math.ceil((new Date(mp.endDate)-new Date())/(1000*60*60*24));
     if(dl<0||dl>SMS_EXPIRE_DAYS)return null;
